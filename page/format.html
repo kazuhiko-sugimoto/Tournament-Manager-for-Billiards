@@ -1,0 +1,298 @@
+<header class="toolbar toolbar-header">
+  <h1 class="title">Tournament Manager for Billiards</h1>
+
+  <div class="toolbar-actions">
+    <div class="btn-group">
+      <button class="btn btn-default">
+        <span class="icon icon-doc-text"></span>
+        Entry
+      </button>
+      <button class="btn btn-default active">
+        <span class="icon icon-cog"></span>
+        Format
+      </button>
+    </div>
+
+    <button class="btn btn-default btn-dropdown pull-right">
+      <span class="icon icon-folder"></span>
+      History
+    </button>
+  </div>
+</header>
+
+<div>
+		<form id="format" onsubmit="return false;" >
+      <table><tr>
+        <td>
+          <div class="form-group">
+            <label>Tournament Name</label>
+            <input type="text" class="form-control" maxlength="20" style="width:200px;" value="{{ name }}">
+          </div>
+        </td>
+        <td>
+            <label>Game Type</label>
+            <select class="form-control" style="width:200px;">
+             <option>Option one</option>
+             <option>Option two</option>
+             <option>Option three</option>
+             <option>Option four</option>
+             <option>Option five</option>
+             <option>Option six</option>
+             <option>Option seven</option>
+             <option>Option eight</option>
+           </select>
+        </td>
+      </tr></table>
+      <div style="width:50%; float:left; border: solid 1px black;">
+          ssss
+      </div>
+      <div style="width:50%; float:right; border: solid 1px black;">
+        bbbb
+      </div>
+    </form>
+</div>
+<!--
+			<div class="form-group">
+		      <label for="name" class="col-xs-1 control-label">登録名称</label>
+		      <div class="col-xs-3">
+            <select  class="form-control" id="format" ng-model="FORMAT" ng-options="format.TEXT for format in formats" ng-change="changeFormat();" required ng-keydown="keydown($event,'game')">
+					           <option ng-repeat="format in formats">{{format.TEXT}}</option>
+		        </select>
+          </div>
+		    </div>
+		    <div class="form-group">
+		      <label for="game" class="col-xs-1 control-label">ゲーム種類</label>
+		      <div class="col-xs-3">
+		        <select  class="form-control" id="game" ng-disabled="Y_STATUS!=null" ng-model="GAME" ng-options="game.TEXT for game in games" ng-change="changeGame();" required ng-keydown="keydown($event,'y_type')">
+					<option ng-repeat="game in games">{{game.TEXT}}</option>
+		        </select>
+		      </div>
+		    </div>
+		</form>
+		<div class="leftFrame">
+			<div class="well bs-component">
+				<form id="form_yosen" class="form-horizontal" onsubmit="return false;" >
+					<legend>予選</legend>
+					<div class="form-group">
+						<label for="y_type" class="col-xs-3 control-label">試合形式</label>
+				      	<div class="col-xs-9">
+				        	<select class="form-control" id="y_type" ng-disabled="Y_STATUS!=null" ng-model="Y_TYPE" ng-options="type.TEXT for type in yTypes" ng-change="change_yType();" ng-keydown="keydown($event,'h_number')">
+								<option ng-repeat="type in yTypes">{{type.TEXT}}</option>
+							</select>
+						</div>
+					</div>
+					<div ng-hide="Y_TYPE.CD==0">
+						<div class="form-group">
+							<label for="h_number" class="col-xs-3 control-label">本戦進出人数</label>
+							<div class="col-xs-3">
+								<select id="h_number" ng-model="H_NUMBER" ng-disabled="Y_STATUS!=null" ng-options="h_number.TEXT for h_number in h_numbers" class="form-control" ng-keydown="keydown($event,'y_handy0')">
+									<option ng-repeat="h_number in h_numbers">{{type.TEXT}}</option>
+								</select>
+							</div>
+							<div ng-show="Y_TYPE.CD==4">
+								<label for="y_groups" class="col-xs-3 control-label">予選グループ数</label>
+								<div class="col-xs-3">
+									<input type="text" number="true" id="y_groups" ng-model="Y_GROUPS" ng-disabled="Y_STATUS!=null" class="form-control" min="1" max="10" ng-change="change_yGroups();" ng-keydown="keydown($event,'y_handy0')" />
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-xs-3 control-label">ハンデ設定</label>
+							<div class="col-xs-9" ng-hide="GAME.CD==10">
+								<label for="y_handy0" class="col-xs-1 control-label ">初</label>
+								<div class="col-xs-3">
+									<input type="text" number="true" ng-disabled="Y_STATUS!=null" required class="form-control" id="y_handy0" ng-model="Y_HANDY0" min="0" max="255" ng-change="yHandy_change(0);" ng-keydown="keydown($event,'y_handy1')" />
+								</div>
+								<label for="y_handy1" class="col-xs-1 control-label ">C</label>
+								<div class="col-xs-3">
+									<input type="text" number="true" ng-disabled="Y_STATUS!=null" required class="form-control" id="y_handy1" ng-model="Y_HANDY1" min="0" max="255" ng-change="yHandy_change(1);" ng-keydown="keydown($event,'y_handy2')"/>
+								</div>
+								<label for="y_handy2" class="col-xs-1 control-label ">B</label>
+								<div class="col-xs-3">
+									<input type="text" number="true" ng-disabled="Y_STATUS!=null" required class="form-control" id="y_handy2" ng-model="Y_HANDY2" min="0" max="255" ng-change="yHandy_change(2);" ng-keydown="keydown($event,'y_handy3')"/>
+								</div>
+								<br>
+								<label for="y_handy3" class="col-xs-1 control-label ">A</label>
+								<div class="col-xs-3">
+									<input type="text" number="true" ng-disabled="Y_STATUS!=null" required class="form-control" id="y_handy3" ng-model="Y_HANDY3" min="0" max="255" ng-change="yHandy_change(3);" ng-keydown="keydown($event,'y_handy4')"/>
+								</div>
+								<label for="y_handy4" class="col-xs-1 control-label ">SA</label>
+								<div class="col-xs-3">
+									<input type="text" number="true" ng-disabled="Y_STATUS!=null" required class="form-control" id="y_handy4" ng-model="Y_HANDY4" min="0" max="255" ng-change="yHandy_change(4);" ng-keydown="keydown($event,'y_handy5')"/>
+								</div>
+								<label for="y_handy5" class="col-xs-1 control-label ">PRO</label>
+								<div class="col-xs-3">
+									<input type="text" number="true" ng-disabled="Y_STATUS!=null" required class="form-control" id="y_handy5" ng-model="Y_HANDY5" min="0" max="255" ng-change="yHandy_change(5);" ng-keydown="keydown($event,'y_female')"/>
+								</div>
+								<br><br><br>
+								<div class="checkbox col-xs-6" ng-show="(Y_TYPE.CD==2 || Y_TYPE.CD==3) && GAME.CD!=4 && GAME.CD!=7">
+						          <label>
+						            <input type="checkbox" ng-disabled="Y_STATUS!=null" ng-model="Y_LOOSER">敗者ゾーン1セットダウン
+						          </label>
+						        </div>
+								<br><br>
+								<div ng-hide="GAME.CD==4 || GAME.CD==7 || (!Y_FEMALE && !Y_LOOSER)">
+									<label for="y_minset" class="col-xs-6 control-label " ng-show="GAME.CD!=3 && GAME.CD!=5">最低セット数</label>
+									<label for="y_minset" class="col-xs-6 control-label " ng-show="GAME.CD==3 || GAME.CD==5">最低ポケット数</label>
+									<div class="col-xs-6">
+										<input type="text" number="true" ng-disabled="Y_STATUS!=null" required class="form-control" id="y_minset" ng-model="Y_MINSET" min="1" max="255" ng-keydown="keydown($event,'h_type')" />
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-9" ng-show="GAME.CD==10" ng-init="Y_CAROM_HANDY=10">
+								<select class="form-control" id="y_carom_handy" ng-model="Y_CAROM_HANDY" ng-disabled="Y_STATUS!=null" ng-change="change_yCaromHandy();" ng-keydown="keydown($event,'h_type')">
+									<option value="3">3掛け</option>
+									<option value="4">4掛け</option>
+									<option value="5">5掛け</option>
+									<option value="6">6掛け</option>
+									<option value="7">7掛け</option>
+									<option value="10">通常</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group" ng-show="GAME.CD==10" ng-init="Y_CAROM_INING='25'">
+							<label class="col-xs-3 control-label">イニング</label>
+							<div class="col-xs-9">
+								<select class="form-control" id="y_carom_ining" ng-model="Y_CAROM_INING" ng-disabled="Y_TYPE.CD!=4 || Y_STATUS!=null" ng-keydown="keydown($event,'h_type')">
+									<option value="15">15</option>
+									<option value="20">20</option>
+									<option value="25">25</option>
+									<option value="99">99</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group" ng-show="GAME.CD==10" ng-init="Y_CAROM_BEHIND='0'">
+							<label class="col-xs-3 control-label">裏撞き</label>
+							<div class="col-xs-9">
+								<div class="radio col-xs-6">
+									<label>
+										<input type="radio" name="Y_CAROM_BEHIND" ng-model="Y_CAROM_BEHIND" value="0" ng-disabled="Y_STATUS!=null">なし</input>
+									</labeL>
+								</div>
+								<div class="radio col-xs-6">
+									<label>
+							      		<input type="radio" name="Y_CAROM_BEHIND" ng-model="Y_CAROM_BEHIND" value="1" ng-disabled="Y_TYPE.CD!=4 || Y_STATUS!=null">あり</input>
+							      	</labeL>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</form>
+			</div>
+		</div>
+		<div class="rightFrame">
+			<div class="well bs-component">
+				<form id="form_honsen" class="form-horizontal" onsubmit="return false;" >
+					<legend>本戦</legend>
+					<div class="form-group">
+						<label for="h_type"  class="col-xs-3 control-label">試合形式</label>
+						<div class="col-xs-9">
+							<select id="h_type" ng-model="H_TYPE" class="form-control" ng-options="type.TEXT for type in types" ng-change="change_hType();" ng-keydown="keydown($event,'h_handy0')">
+								<option ng-repeat="type in types">{{type.TEXT}}</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group" ng-show="H_TYPE.CD==1">
+						<label for="3rd_decide" class="col-xs-3 control-label">3位決定戦</label>
+						<div class="col-xs-9">
+							<select id="3rd_decide" ng-model="H_THIRD" class="form-control" ng-keydown="keydown($event,'h_handy0')">>
+								<option value='0'>なし</option>
+								<option value='1'>あり</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-3 control-label">ハンデ設定</label>
+						<div class="col-xs-9" ng-hide="GAME.CD==10">
+							<label for="h_handy0" class="col-xs-1 control-label ">初</label>
+							<div class="col-xs-3">
+								<input type="text" number="true" required class="form-control" id="h_handy0" ng-model="H_HANDY0" min="0" max="255" ng-change="hHandy_change(0);" ng-keydown="keydown($event,'h_handy1')"/>
+							</div>
+							<label for="h_handy1" class="col-xs-1 control-label ">C</label>
+							<div class="col-xs-3">
+								<input type="text" number="true" required class="form-control" id="h_handy1" ng-model="H_HANDY1" min="0" max="255" ng-change="hHandy_change(1);" ng-keydown="keydown($event,'h_handy2')"/>
+							</div>
+							<label for="h_handy2" class="col-xs-1 control-label ">B</label>
+							<div class="col-xs-3">
+								<input type="text" number="true" required class="form-control" id="h_handy2" ng-model="H_HANDY2" min="0" max="255" ng-change="hHandy_change(2);" ng-keydown="keydown($event,'h_handy3')"/>
+							</div>
+							<br>
+							<label for="h_handy3" class="col-xs-1 control-label ">A</label>
+							<div class="col-xs-3">
+								<input type="text" number="true" required class="form-control" id="h_handy3" ng-model="H_HANDY3" min="0" max="255" ng-change="hHandy_change(3);" ng-keydown="keydown($event,'h_handy4')"/>
+							</div>
+							<label for="h_handy4" class="col-xs-1 control-label ">SA</label>
+							<div class="col-xs-3">
+								<input type="text" number="true" required class="form-control" id="h_handy4" ng-model="H_HANDY4" min="0" max="255" ng-change="hHandy_change(4);" ng-keydown="keydown($event,'h_handy5')"/>
+							</div>
+							<label for="h_handy5" class="col-xs-1 control-label ">PRO</label>
+							<div class="col-xs-3">
+								<input type="text" number="true" required class="form-control" id="h_handy5" ng-model="H_HANDY5" min="0" max="255" ng-change="hHandy_change(5);" ng-keydown="keydown($event,'h_female')"/>
+							</div>
+							<br><br><br>
+							<div class="checkbox col-xs-6" ng-show="(H_TYPE.CD==2 || H_TYPE.CD==3) && GAME.CD!=4 && GAME.CD!=7">
+					          <label>
+					            <input type="checkbox" ng-model="H_LOOSER">敗者ゾーン1セットダウン
+					          </label>
+					        </div>
+							<br><br>
+							<div ng-hide="GAME.CD==4 || GAME.CD==7 || (!H_FEMALE && !H_LOOSER)">
+								<label for="h_minset" class="col-xs-6 control-label " ng-show="GAME.CD!=3 && GAME.CD!=5">最低セット数</label>
+								<label for="h_minset" class="col-xs-6 control-label " ng-show="GAME.CD==3 || GAME.CD==5">最低ポケット数</label>
+								<div class="col-xs-6">
+									<input type="text" number="true" required class="form-control" id="h_minset" ng-model="H_MINSET" min="1" max="255" ng-keydown="keydown($event,'h_type')"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-9" ng-show="GAME.CD==10" ng-init="H_CAROM_HANDY=10">
+							<select class="form-control" id="h_carom_handy" ng-model="H_CAROM_HANDY" ng-change="change_hCaromHandy();" ng-keydown="keydown($event,'name')">
+								<option value="3">3掛け</option>
+								<option value="4">4掛け</option>
+								<option value="5">5掛け</option>
+								<option value="6">6掛け</option>
+								<option value="7">7掛け</option>
+								<option value="10">通常</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group" ng-show="GAME.CD==10" ng-init="H_CAROM_INING='25'">
+						<label class="col-xs-3 control-label">イニング</label>
+						<div class="col-xs-9">
+							<select class="form-control" id="h_carom_ining" ng-model="H_CAROM_INING" ng-disabled="H_TYPE.CD!=4" ng-keydown="keydown($event,'name')">
+								<option value="15">15</option>
+								<option value="20">20</option>
+								<option value="25">25</option>
+								<option value="99">99</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group" ng-show="GAME.CD==10" ng-init="H_CAROM_BEHIND='0'">
+						<label class="col-xs-3 control-label">裏撞き</label>
+						<div class="col-xs-9">
+							<div class="radio col-xs-6">
+								<label>
+									<input type="radio" name="H_CAROM_BEHIND" ng-model="H_CAROM_BEHIND" value="0">なし</input>
+								</labeL>
+							</div>
+							<div class="radio col-xs-6">
+								<label>
+						      		<input type="radio" name="H_CAROM_BEHIND" ng-model="H_CAROM_BEHIND" value="1" ng-disabled="H_TYPE.CD!=4">あり</input>
+						      	</labeL>
+							</div>
+						</div>
+					</div>
+
+				</form>
+			</div>
+		</div>
+
+      <a href="#" class="btn btn-default" style="position:absolute; bottom:10px; right:10px;" ng-click="saveTmp()">保存</a>
+	  </div>
+</div>
+-->
+<footer class="toolbar toolbar-footer">
+  <h1 class="title">Footer</h1>
+</footer>
