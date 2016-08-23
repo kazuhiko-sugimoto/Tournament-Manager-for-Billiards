@@ -1,3 +1,6 @@
+window.jQuery = window.$ = require('./js/jquery-2.1.4.min');
+var _ = require('./js/underscore-min');
+
 var sSkill = new Array("bg","C","B","A","SA","PRO");
 
 var sCountry;
@@ -9,197 +12,61 @@ var sArea;
 var nPlayer;
 var sPlayer;
 var sPassword;
-var sLimit;
-var sSyncDate;
 var sCountryList = [];
 var sCountryFullNameList = [];
-var nIsFemale;
-
-var nTouches;
-
-var nRireki_cnt;
-var nIning;
 var nScore = [];
 
 var sPage;    //移動先ページ名
 var date_now = new Date();
-var isOnline = false;
-var isLockout = false;
-var nLockout_cnt = 0;
-var Lockout_time;
-//players →
-var nPlayers;	//プレイヤー人数
-//var gameNm = new Array("8Ball","9Ball","10Ball","OnePocket","StraightPool","Fujiyama","JAPAN 9","Rotation","Bowlard","c.s.r.s", "Taiwan9");
-// 0:8Ball 1:9Ball 2:10Ball 3:OnePocket 4:14-1 5:Fujiyama 6:JAPAN 7:Rotation 8:bowlard 9:c.s.r.s 10:BankPool →
-var sGameNm = ["8Ball","9Ball","10Ball","OnePocket","StraightPool","SnookerPool","JAPAN 9","Rotation","Kairun","Bowlard","c.s.r.s", "StraightPool","APA 8Ball","APA 9Ball","Kairun"];   //update ver5.03
-// 0:8Ball 1:9Ball 2:10Ball 3:OnePocket 4:14-1 5:Fujiyama 6:JAPAN 7:Rotation 8:taiwan9 9:bowlard 10:c.s.r.s
-var sVersusNm = ["8Ball","9Ball","10Ball","OnePocket","StraightPool","SnookerPool","JAPAN 9","Rotation","Kairun","APA 8Ball","APA 9Ball"];  //update ver5.03
-
-//game_type  →
-var nGame;
-//raceto →
-var nRaceto = [0,0,0,0,0,0,0,0,0,0];	//update apa
 var webRoot = "/";
 
 var nLang = 1;	//0:english 1:japanese
-var isTournament = false;
-var nTabletCd;
-var tabletTimeout;
-
 var callBack;
-
-var player = new Array(10);	//update apa
-
-//drag&drop
-var movingItems={};
-var isMoving=false;
-var imgOffsetX = 40;
-var imgOffsetY = 40;
-var mouseX;
-var mouseY;
-
-var timeout;
-var timeout_page;
-
-var isNoinit = false;
-
-var nReadedCd;
-
-//add 2014/09/13
-var nGuest;
-var oGuest = [];
-
-var nTurn;	//add apa
 
 var isShowFab;
 
-var nOriginRaceto = [];
-
-function getAnalize(){
-	db.cgi({
-	    action: "getAnalize"
-	    ,callback: getAnalize_callback
-	    ,data: {
-	        player: 19
-	    }
-	});
-}
-function getAnalize_callback(d){
-	alert(d.versus_rating);
-	json = d; //JSON.parse(d);
-}
+var t_cd;
 //  *******************************************************
 //  *** *** *** *** ***     class       *** *** *** *** ***
 //  *******************************************************
-var Player = function(cd){
-	this.cd = cd;
-	this.map = PLAYERS({CD:{'==':cd}}).first();
-	if (cd==-1){
-		this.name = M[124];
-		this.class = null;
-		this.rating = null;
-		this.skill = "";
-		//add apa
-		this.sl8 = null;
-		this.sl9 = null;
 
-	} else {
-		this.name = this.map.NAME;
-		this.class = this.map.CLASS;
-		this.skill = sSkill[this.map.CLASS];
-
-		if (this.map.RATING){
-			var num= parseInt(this.map.RATING)/100;
-			var strI = " " + Math.floor(num);
-			var strD = num + "00.00";
-			this.rating = strI.substr(-1,1) + "." + strD.split(".")[1].substr(0,2);
-			this.rating_num = this.map.RATING;
-		} else {
-			this.rating = W[127];
-			switch (this.class){
-				case 0:
-					this.rating_num = 100;
-					break;
-				case 1:
-					this.rating_num = 300;
-					break;
-				case 2:
-					this.rating_num = 500;
-					break;
-				case 3:
-					this.rating_num = 700;
-					break;
-				case 4:
-					this.rating_num = 850;
-					break;
-				case 5:
-					this.rating_num = 950;
-					break;
-			}
-
-		}
-
-		//add apa
-        this.sl8 = getSL8fromRating(this.rating_num);
-        this.sl9 = getSL9fromRating(this.rating_num);
-
-	}
-}
 //  *******************************************************
 //  *** *** *** *** ***     表示   		 *** *** *** *** ***
 //  *******************************************************
-//add   pop
 function popup_show(param){
 	var name = param.name || "";
-	//var title = param.title || null;
-	//var okFnc = param.okFnc || null;
-	//var cancelFnc = param.cancelFnc || null;
-	//var touchFnc = param.touchFnc || null;
-	//var width = param.width || 25;
-	//var height = param.height || null;
-    //var left = param.left || null;
-    //var top = param.top || null;
-	var full = param.full || false;
-	var full_w = param.full_w || false;
-	var fix_footer = param.fix_footer ? "modal-fixed-footer" : "";
+	var title = param.title || "";
+	var width = param.width || "600px";
 	var callback = param.callback || null;
-	var autoClose;
-	if (param.autoClose==undefined){
-		autoClose = true;
-	} else {
-		autoClose = param.autoClose;
-	}
-    playSound("pop");
-    $('.fixed-action-btn').hide();
+
 	$.ajax({
 		url: "./popup/" + name + ".html",
 		//async: false,
 		success:function(d){
 
 			var id="pop_"+name;
-			var html = '<div id="%id" class="modal %footer">';
-		    html+='%content'
-		  	html+='</div>';
-		  	html=template(html,{
-		  		"%id" : id
-		  		,"%content": d
-		  		,"%footer": fix_footer
-		  	})
-		  	$('body').append(html);
+			var html = '<div id="%id" title="%title">';
+	    html+='%content'
+	  	html+='</div>';
+	  	html=template(html,{
+	  		"%id" : id
+	  		,"%content": d
+	  		,"%title": title
+	  	})
+	  	$('body').append(html);
 
-		  	$('#' + id).openModal({
-		      	dismissible: autoClose,
-		      	ready: function() {
-		      		if (full){
-		      			($('#'+id).css({"width":"100%", "max-height":"100%", "height":"100%", "top":"0px"}));
-		      		} else if (full_w){
-		      			($('#'+id).css({"width":"100%", "max-height":"100%"}));
-		      		}
-		      		if (callback){
-		      			callback();
-		      		}
-		      	},
-		      	complete: function () { $('.fixed-action-btn').show();}
+			$('#' + id).dialog({
+				open: function ( event, ui ) {
+					if (callback){
+						callback();
+					}
+				}
+				,beforeClose: function ( event, ui ) {
+					$('#' + id).remove();
+					//popup_hide(name);
+				}
+				,modal: true
+				,width: width
 			});
 		},
 		error:function(d){
@@ -207,60 +74,14 @@ function popup_show(param){
 	});
 }
 function popup_hide(name){
-	$('#pop_' + name).closeModal();
-	$('.fixed-action-btn').show();
+	$('#pop_' + name).dialog( "close" );
 	_.delay(
 		function(){
 			$('#pop_' + name).remove();
 		}, 500);
 }
 
-/*
-function popup_withoutBtn_show(param){
-	var name = param.name || "";
-	var title = param.title || "";
-	var callback = param.callback || null;
-	var okFnc = param.okFnc || null;
-	var width = param.width || 500;
-	var height = param.height || 500;
-	var top = (getBrowserHeight() - height)/2;
-	var left = (100 - width)/2;
-	$.ajax({
-		url: "./popup/" + name + ".html",
-		//async: false,
-		success:function(d){
-			playSound("pop");
-			var s='<div id="mask" style="opacity:0.5; width:100%; height:100%;"></div>';
-            s+='<div class="afPopup" style="top:%top; left:%left; width:%width; height:%height;">%body</div>';
-            s=template(s,{
-            	'%width':width+'%',
-            	'%height':height+"px",
-            	'%top':top+'px',
-            	'%left':left+"%",
-            	'%body':d
-            });
-			$('body').append(s);
-			$('.afPopup').on("click",function(event) {
-				$('.afPopup').unbind("click");
-				$('.afPopup').remove();
-				$('#mask').remove();
-				if (okFnc){
-					okFnc();
-				}
-			});
-			if (callback){
-				callback();
-			}
 
-
-		},
-		error:function(d){
-			//alert(d);
-			//unwait();
-			msg("e",L("M011"));
-		}
-	});
-}*/
 function page_show(name, callback){
 
 	$("#index_help").remove();
@@ -363,7 +184,6 @@ function showSwitch(tag, options, callback, value){
 }
 function clickSwitch(tag, index, callback){
 	if (!$('#' + tag ).hasClass("hide")){
-		playSound("switch");
 		changeSwitch(tag, index);
 		if (callback){
 			_.delay(function(){callback(index);}, 50);
@@ -394,7 +214,6 @@ function showCheckbox(tag, options, callback, value){
 	$('#' + new_tag ).on("touchstart",function(evt){
 		//clickCheckbox(new_tag , callback)
 		if (!$('#' + new_tag ).parent().hasClass("hide")){
-			playSound("switch");
 			var val = changeCheckbox(new_tag);
 			$('#' + new_tag ).text(options[val ? 1 : 0]);
 			if (callback){
@@ -405,7 +224,6 @@ function showCheckbox(tag, options, callback, value){
 }
 function clickCheckbox(tag, callback){
 	if (!$('#' + tag ).parent().hasClass("hide")){
-		playSound("switch");
 		var val = changeCheckbox(tag);
 		if (callback){
 			_.delay(function(){callback(val);}, 50);
@@ -460,16 +278,12 @@ function msg(type, msg){
 
 	switch (type){
 		case 'e':
-			playSound("error");
 			break;
 		case 'm':
-			playSound("info");
 			break;
 		case 'a':
-			playSound("sumup");
 			break;
 		case 's':
-			playSound("confirm");
 			break;
 	};
 	//alert(msg);
@@ -493,7 +307,6 @@ function msg_bind2(msg,s1,s2){
 	});
 }
 function toggle_sidebar(){
-	playSound("switch");
 	if ($('.sidebar').css("left")!="0px"){
 		open_sidebar();
 	} else {
@@ -501,7 +314,6 @@ function toggle_sidebar(){
 	}
 }
 function open_sidebar(){
-	//playSound("switch");
 	$( ".sidebar" ).animate({
    		left: "0px"
 	});
@@ -540,54 +352,20 @@ function close_sidebar(){
 //  *******************************************************
 //  *** *** *** *** ***     タッチイベント   *** *** *** *** ***
 //  *******************************************************
-function touchMove(e){
 
-	if (isMoving==true){
-		e.preventDefault();
-		//nTouches = e.touches.length;
-		mouseX = (e.originalEvent.touches[0].pageX-imgOffsetX);
-		mouseY = (e.originalEvent.touches[0].pageY-imgOffsetY);
-		$(dragItem).css({"top":(mouseY/getBrowserHeight()*100)+"%", "left": (mouseX/getBrowserWidth()*100)+"%"});
-	}
-}
 //  *******************************************************
 //  *** *** *** *** ***     help         *** *** *** *** ***
 //  *******************************************************
-function drawLine(x1,y1,x2,y2){
-	context_help.lineWidth = 6;
-	context_help.strokeStyle = "palegreen";
-	context_help.beginPath();
-	context_help.moveTo(x1,y1);
-	context_help.lineTo(x2,y2);
-	context_help.stroke();
-}
-function drawText(x,y,text){
-	context_help.font = "30px Chalkboard SE";
-	context_help.fillStyle = "palegreen";
-	context_help.fillText(text, x, y);
-}
-function drawRect(x,y,w,h){
-	context_help.lineWidth = 6;
-	context_help.strokeStyle = "palegreen";
-	context_help.strokeRect(x,y,w,h);
-}
-function hideHelp(){
-	cssHide('.help');
-}
-function clearHelp(){
-	context_help.clearRect(0, 0, 1400, 900);
-}
+
 //  *******************************************************
 //  *** *** *** *** ***     goto         *** *** *** *** ***
 //  *******************************************************
 function gotoHome(){
 	//intel.xdk.player.playSound("sounds/select.mp3");
 	//$.ui.loadContent("#page_index",false,false,"slide");
-	playSound("enter");
 	page_show("title", init_index);
 }
 function goto(page_name){
-	playSound("enter");
 	isMoving = false;
 	switch (page_name){
 		case "versus":
@@ -721,116 +499,7 @@ function goto(page_name){
 //  *******************************************************
 //  *** *** *** *** ***     情報取得         *** *** *** *** ***
 //  *******************************************************
-function getHallName(cd){
-	var name;
-	if (cd=="0" || !cd){
-		name = W[102];
-	} else {
-		name = HALLS({ CD:{'==':cd}
-					}).select("NAME");
-	}
-	return name;
-}
-function getPlayerName(cd){
-	if (cd>0){
-		var name = PLAYERS({
-						CD:{'==':cd}
-					}).select("NAME");
-		return name;
-	} else {
-		return M[119];
-	}
-}
-function getClass(cd){
-	return parseInt(PLAYERS({CD:{'==':cd}}).select("CLASS"));
-}
-function getRating(cd){
-	var rating = PLAYERS({CD:{'==':cd}}).select("RATING");
-	if (rating==""){
-		return W[127];
-	} else {
-		var num=rating/100;
-		var strI = " " + Math.floor(num);
-		var strD = num + "00.00";
-		return strI.substr(-1,1) + "." + strD.split(".")[1].substr(0,2);
-	}
-};
-function convRating( rating ){
-	if (!rating){
-		return W[127];
-	} else {
-		var num=rating/100;
-		var strI = " " + Math.floor(num);
-		var strD = num + "00.00";
-		return strI.substr(-1,1) + "." + strD.split(".")[1].substr(0,2);
-	}
-};
 
-//add apa start
-function getRating_num(cd){
-	var map = PLAYERS({CD:{'==':cd}}).first();
-    var rating = map.RATING;
-
-    if (!rating){
-		switch (getClass(cd)){
-            case 0:
-                rating = 100;
-                break;
-            case 1:
-                rating = 300;
-                break;
-            case 2:
-                rating = 500;
-                break;
-            case 3:
-                rating = 700;
-                break;
-            case 4:
-                rating = 850;
-                break;
-            case 5:
-                rating = 950;
-                break;
-        }
-	}
-    return rating;
-}
-function getSL9(cd){
-    var rating = getRating_num(cd);
-    var sl9 = getSL9fromRating(rating);
-    return sl9;
-}
-function getSL9fromRating(rating){
-    var sl9;
-    if (rating<400){
-        sl9 = Math.floor(1 + rating/400*4);
-    } else if (rating<600){
-        sl9 = Math.floor(5 + (rating-400)/200*3);
-    } else if (rating<900){
-        sl9 = Math.floor(8 + (rating-600)/300*2);
-    } else {
-        sl9 = 9;
-    }
-    return sl9;
-}
-function getSL8(cd){
-    var rating = getRating_num(cd);
-    var sl8 = getSL8fromRating(rating);
-    return sl8;
-}
-function getSL8fromRating(rating){
-    var sl8;
-    if (rating<200){
-        sl8 = Math.floor(2 + rating/200);
-    } else if (rating<400){
-        sl8 = Math.floor(3 + (rating-200)/200*2);
-    } else if (rating<600){
-        sl8 = Math.floor(5 + (rating-400)/200*2);
-    } else {
-        sl8 = 7;
-    }
-    return sl8;
-}
 function get_template(param){
 
 	var name = param.name || "";
@@ -900,36 +569,7 @@ function getNowDate(){
 //  *******************************************************
 //  *** *** *** *** ***     tablet         *** *** *** *** ***
 //  *******************************************************
-function chkTablet_timer(){
-    clearTimeout(tabletTimeout);
-    set_tabletScore();
-    //tabletTimeout=setTimeout("chkTablet_timer();",5000);
-}
-function set_tabletScore(){
-    clearTimeout(tabletTimeout);
-    db.cgi({
-        action: "setTabletScore"
-        ,callback: successFnc_set_tabletScore
-        ,async: true
-        ,isNoWait : true
-        ,data: {
-            cd: nTabletCd
-            , player1:player[0].cd
-            , player2:player[1].cd
-            , score1:nScore[0]
-            , score2:nScore[1]
-        }
-    });
-}
-function successFnc_set_tabletScore(d){
-    if (d=="fin"){
-        $("body").show();
-        clearTimeout(tabletTimeout);
-        gotoHome();
-    } else {
-        tabletTimeout=setTimeout("chkTablet_timer();",5000);
-    }
-}
+
 //  *******************************************************
 //  *** *** *** *** ***     function         *** *** *** *** ***
 //  *******************************************************
@@ -939,15 +579,10 @@ function fncSetJSON(object,item){
 	localStorage.setItem(item, nativeJSON);
 }
 function getLocalStorage(){
-	isHall = window.localStorage.getItem("isHall")=="1" ? true : false;
 	nHall = parseInt(window.localStorage.getItem("nHall") || -1);
-	sHall = window.localStorage.getItem("sHall");
 	sCountry = window.localStorage.getItem("sCountry");
 	nArea = parseInt(window.localStorage.getItem("nArea") || 0);
-	sArea = window.localStorage.getItem("sArea");
 	nPlayer = parseInt(window.localStorage.getItem("nPlayer") || -1);
-	sPlayer = window.localStorage.getItem("sPlayer");
-	sSyncDate = window.localStorage.getItem("sSyncDate");
 	var lang;
 	var nav_language = window.navigator.userLanguage || window.navigator.language || window.navigator.browserLanguage;
 	if  (nav_language.indexOf("ja")>=0){
@@ -958,25 +593,14 @@ function getLocalStorage(){
     }
 	nLang = parseInt(window.localStorage.getItem("nLang") || lang);
 	sPassword = window.localStorage.getItem("sPassword");
-	nTabletCd = parseInt(window.localStorage.getItem("nTabletCd") || 0);
-	sLimit = window.localStorage.getItem("sLimit");
-    nIsFemale = parseInt(window.localStorage.getItem("nIsFemale") || 0);
 }
 function setLocalStorage(){
-	window.localStorage.setItem("isHall",isHall==true ? "1" : "0");
 	window.localStorage.setItem("nHall",nHall);
-	window.localStorage.setItem("sHall",sHall);
 	window.localStorage.setItem("sCountry",sCountry);
 	window.localStorage.setItem("nArea",nArea);
-	window.localStorage.setItem("sArea",sArea);
 	window.localStorage.setItem("nPlayer",nPlayer);
-	window.localStorage.setItem("sPlayer",sPlayer);
-	window.localStorage.setItem("sSyncDate",sSyncDate);
 	window.localStorage.setItem("nLang",nLang);
 	window.localStorage.setItem("sPassword",sPassword);
-	window.localStorage.setItem("nTabletCd",nTabletCd);
-	window.localStorage.setItem("sLimit",sLimit);
-    window.localStorage.setItem("nIsFemale", nIsFemale);
 }
 function getDiv0(s, d){
 	if (d!=0 && isNaN(d)!=true){
@@ -1140,16 +764,7 @@ function playSound_atpool(url){
 	intel.xdk.player.playSound(url);
 	clearTimeout(timeout);
 }*/
-function setSync(table_name, table_cd){
-	var sync_max = SYNC().max("CD") +1;
-    SYNC.insert(
-        {
-            CD: sync_max
-            ,TABLE_NAME: table_name
-            ,TABLE_CD: table_cd
-        }
-    );
-}
+
 function getBrowserWidth() {
         if ( window.innerWidth ) {
                 return window.innerWidth;
@@ -1174,9 +789,7 @@ function getBrowserHeight() {
         }
         return 0;
 }
-function addMovingItem(ind){
-   movingItems[ind]=1;
-}
+
 function chkIllegalCharacters(value)
 {
     if ( value.match(/[<>\[\]&\^'\*;']/) )	// 入力値の禁則文字「<」、「>」、「[」、「]」、「&」、「^」、「'」、「*」 ,「;」 , 「'」
@@ -1185,25 +798,8 @@ function chkIllegalCharacters(value)
 	}
 	return false;
 }
-function setLockout(){
-	nLockout_cnt++;
-	if (nLockout_cnt>2){
-		isLockout = true;
-		Lockout_time = new Date().getTime();
-		msg("e",M[126]);
-		return true;
-	} else {
-		return false;
-	}
 
-}
-function getIsIpad(){
-	if( navigator.userAgent.indexOf('iPad') > 0 ){
-		return true;
-	} else {
-		return false;
-	}
-}
+
 function checkSafeUrl(url){
     if( url.match( /^https?:\/\// ) || trim(url)==""){
         return true;
@@ -1211,35 +807,34 @@ function checkSafeUrl(url){
          return false;
     }
 }
-function checkConnection(noMsg){	// update sync
-	var flg = noMsg || false;	// update sync
-    var networkState = navigator.connection.type;
-    if (networkState==Connection.NONE){
-
-    	//update sync
-        if (!flg){
-
-            msg("e",M[101]);
-        }
-
-    	//delete ver 4.5
-    	/*
-    	if (!flg){
-    		gotoHome();
-    	}	*/
-    	return false;
-    } else {
-    	return true;
-    }
-}
 function clickFab(){
-	playSound("pop");
     isShowFab = !isShowFab;
     if (isShowFab){
         $('.fixed-action-btn').openFAB();
     } else {
         $('.fixed-action-btn').closeFAB();
     }
+}
+/****************************************************************
+* バイト数を数える
+*
+* 引数 ： str 文字列
+* 戻り値： バイト数
+*
+****************************************************************/
+function countLength(str) {
+    var r = 0;
+    for (var i = 0; i < str.length; i++) {
+        var c = str.charCodeAt(i);
+        // Shift_JIS: 0x0 ～ 0x80, 0xa0 , 0xa1 ～ 0xdf , 0xfd ～ 0xff
+        // Unicode : 0x0 ～ 0x80, 0xf8f0, 0xff61 ～ 0xff9f, 0xf8f1 ～ 0xf8f3
+        if ( (c >= 0x0 && c < 0x81) || (c == 0xf8f0) || (c >= 0xff61 && c < 0xffa0) || (c >= 0xf8f1 && c < 0xf8f4)) {
+            r += 1;
+        } else {
+            r += 2;
+        }
+    }
+    return r;
 }
 
 //未使用

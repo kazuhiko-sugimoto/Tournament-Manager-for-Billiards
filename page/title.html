@@ -1,25 +1,85 @@
-<header class="toolbar toolbar-header">
-  <h1 class="title">Tournament Manager for Billiards</h1>
+<div id="entry" style="height:100%;">
+  <header class="toolbar toolbar-header">
+    <h1 class="title">Tournament Manager for Pool</h1>
 
-  <div class="toolbar-actions">
-    <div class="btn-group">
-      <button class="btn btn-default">
-        <span class="icon icon-doc-text"></span>
-        Entry
-      </button>
-      <button class="btn btn-default active">
-        <span class="icon icon-cog"></span>
-        Format
+    <div class="toolbar-actions">
+      <div class="btn-group">
+        <button class="btn btn-default" onclick="index.clickFormat();">
+          <span class="icon icon-cog"></span>
+          {{ W[35] }}
+        </button>
+      </div>
+
+      <button class="btn btn-default btn-dropdown pull-right">
+        <span class="icon icon-folder"></span>
+        {{ W[36] }}
       </button>
     </div>
+  </header>
 
-    <button class="btn btn-default btn-dropdown pull-right">
-      <span class="icon icon-folder"></span>
-      History
-    </button>
-  </div>
-</header>
-
-<footer class="toolbar toolbar-footer">
-  <h1 class="title">Footer</h1>
-</footer>
+  <h4>{{ NAME }}</h4>
+	<form id="form_entry" onsubmit="return false;" style="position:absolute; top: 100px; width:100%; bottom:50px; overflow: auto;">
+	   <table id="toTable" class="table-striped" width="750px">
+       <thead>
+         <tr>
+						<th width="30px"></th>
+						<th width="150px">{{ W[24] }}</th>
+						<th width="100px">{{ W[25] }}</th>
+						<th width="150px">{{ W[26] }}</th>
+						<th class='ampm' width="120px" v-show="H_TYPE!=4">{{ W[27] }}</th>
+						<th class='yosenHandy' width="100px" v-show="Y_TYPE!=0">{{ W[28] }}</th>
+						<th width="100px">{{ W[29] }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="(index, entry) in entries">
+						<td>
+              <button class="btn btn-default" onclick="index.removeRow({{ index }});">
+                <span class="icon icon-minus"></span>
+              </button>
+						</td>
+			      <td>
+              <input id="name{{ index }}" type="text" class="form-control" v-model="entry.NAME" maxlength="12" placeholder="{{ M[0] }}">
+            </td>
+			      <td>
+              <select v-model="entry.SKILL" class="form-control">
+        					<option value="0">Beginner</option>
+        					<option value="1">C</option>
+        					<option value="2">B</option>
+        					<option value="3">A</option>
+        					<option value="4">SA</option>
+        					<option value="5">Pro</option>
+        			</select>
+            </td>
+			      <td>
+              <input type="text" id="hall{{ index }}" v-model="entry.HALL" class="form-control" maxlength="12" placeholder="{{ M[0] }}">
+            </td>
+			      <td class="ampm" ng-hide="H_TYPE==4">
+			        <select id="am_pm{{entry.CD}}" :disabled="Y_STATUS!=null" v-model="{{entry.AM_PM}}" class="form-control" onchange="change_hType();">
+								<option value='0'>{{ W[30] }}</option>
+								<option value='1'>{{ W[31] }}</option>
+								<option value='2'>{{ W[32] }}</option>
+							</select>
+			      </td>
+			      <td class='yosenHandy' v-show="Y_TYPE!=0">
+							<input type="number" :disabled="Y_STATUS!=null" id='yHandy{{ index }}' class="form-control" min='1' max='255' v-model="entry.Y_HANDY"  required/>
+						</td>
+						<td>
+							<input type='number' required id='hHandy{{ index }}' class="form-control" min='1' max='255' v-model="entry.H_HANDY" required/>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+      <div id="errMsg" style="color:red;"></div>
+      <button class="btn btn-form btn-default" style="float:right;" onclick="index.addRow();">
+        <span class="icon icon-plus"></span>
+        {{ W[22] }}
+      </button>
+      <button class="btn btn-default" style="float:left;" onclick="index.addRow();">
+        <span class="icon icon-doc-text"></span>
+        {{ W[23] }}
+      </button>
+		</form>
+    <button class="btn btn-form btn-default" style="position:absolute; bottom:10px; left:10px;" onclick="index.click_Save();">{{ W[33] }}</button>
+    <button class="btn btn-form btn-primary" style="position:absolute; bottom:10px; right:10px;" onclick="click_back('<? e(BASE_URL) ?>open/index.php')">{{ W[34] }}</button>
+</div>

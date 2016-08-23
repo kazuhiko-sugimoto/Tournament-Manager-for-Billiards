@@ -1,0 +1,165 @@
+<div class="modal-content">
+		<form id="format" onsubmit="return false;" >
+      <table><tr>
+        <td>
+          <div class="form-group">
+            <label>{{　W[1] }}</label>
+            <input id="name_format" type="text" class="form-control" maxlength="20" style="width:200px;" v-model="NAME" placeholder="{{ M[3] }}">
+          </div>
+        </td>
+        <td>
+            <label>{{ W[0] }}</label>
+            <select id="game" class="form-control" style="width:200px;" v-model="GAME" onchange="format.changeGame();">
+             <option value="0">8Ball</option>
+             <option value="1">9Ball</option>
+             <option value="2">10Ball</option>
+             <option value="7">Rotation</option>
+           </select>
+        </td>
+      </tr></table>
+			<div style="width:100%;">
+	      <div style="width:50%; float:left; border: solid 1px black;">
+	        <legend>{{　W[2] }}</legend>
+	        <table>
+	          <tr>
+	            <td>{{ W[3] }}</td>
+	            <td>
+	              <select class="form-control" v-model="Y_TYPE" :disabled="Y_STATUS!=null">
+	                <option value="0">{{ W[17] }}</option>
+	                <option value="1">{{ W[18] }}</option>
+	                <option value="3">{{ W[19] }}</option>
+	                <option value="4">{{ W[20] }}</option>
+	              </select>
+	            </td>
+	          </tr>
+	          <tr v-show="Y_TYPE!=0">
+	            <td>{{ W[4] }}</td>
+	            <td>
+	              <select class="form-control" v-model="H_NUMBER" :disabled="Y_STATUS!=null">
+	                <option value="4">4</option>
+	                <option value="8">8</option>
+	                <option value="16">16</option>
+	              </select>
+	            </td>
+	          </tr>
+	          <tr v-show="Y_TYPE==4">
+	            <td>{{ W[5] }}</td>
+	            <td>
+	              <select class="form-control" v-model="Y_GROUPS" :disabled="Y_STATUS!=null">
+	                <option value="1">1</option>
+	                <option value="2">2</option>
+	                <option value="4">4</option>
+	                <option value="8">8</option>
+	              </select>
+	            </td>
+	          </tr>
+	        </table>
+	        <legend v-show="Y_TYPE!=0">{{ W[8] }}</legend>
+	        <table v-show="Y_TYPE!=0">
+	          <tr>
+	            <td>beginner</td>
+	            <td>C</td>
+	            <td>B</td>
+	          </tr>
+	          <tr>
+	            <td>
+	              <input id="y_handy0" type="number" :disabled="Y_STATUS!=null" required class="form-control" v-model="Y_HANDY0" min="0" max="255" />
+	            </td>
+	            <td>
+	              <input id="y_handy1" type="number" :disabled="Y_STATUS!=null" required class="form-control" v-model="Y_HANDY1" min="0" max="255" />
+	            </td>
+	            <td>
+	              <input id="y_handy2" type="number" :disabled="Y_STATUS!=null" required class="form-control" v-model="Y_HANDY2" min="0" max="255" />
+	            </td>
+	          </tr>
+	          <tr>
+	            <td>A</td>
+	            <td>SA</td>
+	            <td>PRO</td>
+	          </tr>
+	          <tr>
+	            <td>
+	              <input id="y_handy3" type="number" :disabled="Y_STATUS!=null" required class="form-control" v-model="Y_HANDY3" min="0" max="255" />
+	            </td>
+	            <td>
+	              <input id="y_handy4" type="number" :disabled="Y_STATUS!=null" required class="form-control" v-model="Y_HANDY4" min="0" max="255" />
+	            </td>
+	            <td>
+	              <input id="y_handy5" type="number" :disabled="Y_STATUS!=null" required class="form-control" v-model="Y_HANDY5" min="0" max="255" />
+	            </td>
+	          </tr>
+	        </table>
+	      </div>
+	      <div style="width:50%; float:right; border: solid 1px black;">
+	        <legend>{{ W[15] }}</legend>
+	        <table>
+	          <tr>
+	            <td>{{ W[3] }}</td>
+	            <td>
+	              <select class="form-control" v-model="H_TYPE">
+	                <option value="1">{{ W[18] }}</option>
+	                <option value="2">{{ W[21] }}</option>
+	                <option value="3">{{ W[19] }}</option>
+	                <option value="4">{{ W[20] }}</option>
+	              </select>
+	            </td>
+	          </tr>
+	          <tr v-show="H_TYPE==1">
+	            <td>{{ W[16] }}</td>
+	            <td>
+	              <select class="form-control" v-model="H_THIRD">
+	                <option value="0">NO</option>
+	                <option value="1">YES</option>
+	              </select>
+	            </td>
+	          </tr>
+	        </table>
+	        <legend>{{ W[8] }}</legend>
+	        <table>
+	          <tr>
+	            <td>beginner</td>
+	            <td>C</td>
+	            <td>B</td>
+	          </tr>
+	          <tr>
+	            <td>
+	              <input id="h_handy0" type="number" required class="form-control" v-model="H_HANDY0" min="0" max="255" />
+	            </td>
+	            <td>
+	              <input id="h_handy1" type="number" required class="form-control" v-model="H_HANDY1" min="0" max="255" />
+	            </td>
+	            <td>
+	              <input id="h_handy2" type="number" required class="form-control" v-model="H_HANDY2" min="0" max="255" />
+	            </td>
+	          </tr>
+	          <tr>
+	            <td>A</td>
+	            <td>SA</td>
+	            <td>PRO</td>
+	          </tr>
+	          <tr>
+	            <td>
+	              <input id="h_handy3" type="number" required class="form-control" v-model="H_HANDY3" min="0" max="255" />
+	            </td>
+	            <td>
+	              <input id="h_handy4" type="number" required class="form-control" v-model="H_HANDY4" min="0" max="255" />
+	            </td>
+	            <td>
+	              <input id="h_handy5" type="number" required class="form-control" v-model="H_HANDY5" min="0" max="255" />
+	            </td>
+	          </tr>
+	        </table>
+	      </div>
+			</div>
+			<br><br><br><br><br><br><br><br><br><br><br><br>
+			<div>
+				<div id="errMsg_format" style="color:red;"></div>
+				<a class="btn btn-form btn-default" style="float:right;" onclick="format.save();">{{ W[33] }}</a>
+			</div>
+		</form>
+</div>
+<style>
+select {
+	color:black;
+}
+</style>

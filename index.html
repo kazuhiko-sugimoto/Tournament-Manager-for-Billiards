@@ -4,19 +4,28 @@
   <meta charset="UTF-8">
   <title>Sample</title>
   <link type="text/css" rel="stylesheet" href="css/photon.min.css"  media="screen,projection"/>
+  <link rel="stylesheet" href="./css/jquery-ui.min.css"></link>
+  <script type="text/javascript" charset="utf-8" src="./js/master.js"></script>
   <script type="text/javascript" charset="utf-8" src="./js/taffy-min.js"></script>
   <script type="text/javascript" charset="utf-8" src="./js/vue.min.js"></script>
-  <script type="text/javascript" charset="utf-8" src="./js/master.js"></script>
   <script type="text/javascript" charset="utf-8" src="./js/index.js"></script>
+  <script type="text/javascript" charset="utf-8" src="./js/jquery-ui.min.js"></script>
+  <script type="text/javascript" charset="utf-8" src="./js/language.js"></script>
+  <script type="text/javascript" charset="utf-8" src="./js/db.js"></script>
   <script type="text/javascript" charset="utf-8" src="./js/format.js"></script>
+  <script type="text/javascript" charset="utf-8" src="./js/edit_player.js"></script>
   <script type="text/javascript">
-    window.jQuery = window.$ = require('./js/jquery-2.1.4.min');
-    var _ = require('./js/underscore-min');
+
       $(document).ready(function(){
-        //getLocalStorage();
-        //nLang = 0;
-        //db.getTAFFY();
-        page_show("format", init_format);
+        getLocalStorage();
+        //nLang = 1;
+        if (nLang){
+            japanese();
+        } else {
+            english();
+        }
+        db.getTAFFY();
+        page_show("title", init_index);
       });
    </script>
 </head>
