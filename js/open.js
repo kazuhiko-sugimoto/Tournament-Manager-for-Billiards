@@ -7,42 +7,7 @@ var vm;
 var x_center;
 
 /*
-  $ionicModal.fromTemplateUrl('templates/pop_opening.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-  }).then(function(modal) {
-      open.modal_opening = modal;
-  });
-  $ionicModal.fromTemplateUrl('templates/nav_open.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-  }).then(function(modal) {
-      open.modal_navOpen = modal;
-  });
-  $ionicModal.fromTemplateUrl('templates/pop_score.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-  }).then(function(modal) {
-      open.modal_score = modal;
-  });
-  $ionicModal.fromTemplateUrl('templates/pop_showAutoList.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-  }).then(function(modal) {
-      open.modal_showAutoList = modal;
-  });
-  $ionicModal.fromTemplateUrl('templates/pop_selectGame.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-  }).then(function(modal) {
-      open.modal_selectGame = modal;
-  });
-  $ionicModal.fromTemplateUrl('templates/pop_undoGame.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-  }).then(function(modal) {
-      open.modal_undoGame = modal;
-  });
+
   $ionicModal.fromTemplateUrl('templates/pop_totalResult.html', {
       scope: $scope,
       animation: 'slide-in-up'
@@ -401,15 +366,9 @@ function open_click_tReset(){
 	} else {
 		s=W[15];
 	}
-   	var confirmPopup = $ionicPopup.confirm({
-    	title: 'Confirm',
-     	template: vm.FORMAT.NAME + ":" + s + M[7]
-   	});
-   	confirmPopup.then(function(res) {
-     	if(res) {
-       		open_proc_tReset();
-     	}
-   	});
+	if (confirm(vm.FORMAT.NAME + ":" + s + M[7])){
+		open_proc_tReset();
+	}
 }
 function open_proc_tReset(){
 	//intel.xdk.player.playSound("sounds/info.mp3");
@@ -498,7 +457,6 @@ function open_click_shuffle(){
 			break;
 		}
 	}
-	open.modal_navOpen.hide();
 }
 function open_click_undoGame(){
 	popup_show({
@@ -608,16 +566,9 @@ function open_click_Fin(){
 }
 //click yFin
 function open_click_yFin(){
-	//intel.xdk.player.playSound("sounds/select.mp3");
-    var confirmPopup = $ionicPopup.confirm({
-	    title: 'Confirm',
-	    template: M[8]
-	});
-   	confirmPopup.then(function(res) {
-     	if(res) {
-       		open_proc_click_yFin();
-     	}
-   	});
+	if (confirm(M[8])){
+		open_proc_click_yFin();
+	}
 }
 function open_proc_click_yFin(){
 
@@ -671,12 +622,7 @@ function open_proc_click_yFin(){
 	case 4:
 		var badGroup = showBtnResultLeague();
 		if (badGroup!=0){
-			//intel.xdk.player.playSound("sounds/error.mp3");
-			//$("#afui").popup("Group"+badGroup +msg(28));
-			var alertPopup = $ionicPopup.alert({
-			    title: 'Alert',
-			    template: "Group"+badGroup + M[15]
-			});
+			alert("Group"+badGroup + M[15]);
 			open.grp = badGroup-1;
 			return;
 		}
@@ -714,7 +660,7 @@ function open_proc_click_yFin(){
 	//intel.xdk.player.playSound("sounds/info.mp3");
 	open_setRanking(wRankList);
 	vm.nIsHonsen=1;
-	open_onLoad();
+	init_open();
 
 }
 function suucess_open_click_yFin(d){
@@ -723,15 +669,9 @@ function suucess_open_click_yFin(d){
 //click hFin
 function open_click_hFin(){
 	//intel.xdk.player.playSound("sounds/select.mp3");
-    var confirmPopup = $ionicPopup.confirm({
-     	title: 'Confirm',
-     	template: M[9]
-   	});
-   	confirmPopup.then(function(res) {
-     	if(res) {
-       		open_proc_click_hFin();
-     	}
-   	});
+	if (confirm(M[9])){
+		open_proc_click_hFin();
+	}
 }
 function open_proc_click_hFin(){
 	//intel.xdk.player.playSound("sounds/confirm.mp3");
@@ -857,7 +797,7 @@ function open_proc_click_hFin(){
 	//getData( "open/fin", {data: wRankList, cd:t_cd, honsen: vm.nIsHonsen, grade: grade}, suucess_open_click_hFin,false );
 	open_setRanking(wRankList);
 	//dispHide('#open_fin');
-	open.isShowFin = false;
+	vm.isShowFin = false;
 	vm.isShowResult=true;
 	vm.isShowFootArea = false;
 	open_click_showTotalResult();
@@ -886,18 +826,27 @@ function open_setRanking(list){
 	vm.FORMAT.STATUS = wstatus;
 }
 function open_click_showTotalResult(){
-	//intel.xdk.player.playSound("sounds/select.mp3");
+	popup_show({
+		name: "totalResult",
+    title: W[40],
+    width: "600px",
+		callback: totalResultPop_callback
+	});
+}
+function totalResultPop_callback(){
 	var list = [];
 	ENTRY({T_CD:{'==':t_cd}}).order("RANK").each(function (r) {
 		list.push({
 			rank: r.RANK ,
-			name: getName_P(r.P_CD)
+			name: r.NAME
 		})
 	});
-	open.totalResult = {
-		items: list
-	};
-	open.modal_totalResult.show();
+	new Vue({
+		el: '#totalResult',
+		data: {
+			items: list
+		}
+	})
 }
 function click_grp(index){
 	open.grp = index;
@@ -929,17 +878,11 @@ function hold_tableTab(num){
 	if (vm.useTable[num]==false){
 
 		open_setEnabledTable(num,true);
-		var alertPopup = $ionicPopup.alert({
-		    title: 'Message',
-		    template: M[10]
-		});
+		alert(M[10]);
 	} else {
 		if (open.tableInfo[num]) return;
 		open_click_disabledTable(num);
-		var alertPopup = $ionicPopup.alert({
-		    title: 'Message',
-		    template: M[11]
-		});
+		alert(M[11]);
 	}
 }
 function open_click_tableTab(num){
@@ -1254,10 +1197,7 @@ function checkKeycode(keycode){
 }
 function network_error(){
 	open.isSpinner = false;
-	var alertPopup = $ionicPopup.alert({
-     title: 'Alert!',
-     template: 'network error'
-   });
+	alert('network error');
 }
 function procUpload(keycode){
 	for (var i=0; i<5; i++){
@@ -1825,7 +1765,7 @@ function open_proc_undoTreeList(no){
 		SCORE2:null
 	});
 	popup_hide("undoGame");
-	open.isShowFin = false;
+	vm.isShowFin = false;
  	vm.isShowFootArea = true;
 	open_showTreeTable();
 }
@@ -1841,7 +1781,7 @@ function open_proc_undoLeagueList(grp,no){
 		SCORE2:null
 	});
 	popup_hide("undoGame");
-	open.isShowFin = false;
+	vm.isShowFin = false;
  	vm.isShowFootArea = true;
 	showLeagueTable();
 }
@@ -2635,18 +2575,18 @@ function open_showTreeTable(){
 	if (flg==false){
 	 	switch (vm.FORMAT.STATUS){
 	 		case 0:
-	 			open.isShowFin = false;
+	 			vm.isShowFin = false;
 	 		case 1:
-	 			open.isShowFin = vm.nIsHonsen ?  false : true;
+	 			vm.isShowFin = vm.nIsHonsen ?  false : true;
 	 			break;
 	 		case 2:
-	 			open.isShowFin = false;
+	 			vm.isShowFin = false;
 	 			break;
 	 		case 3:
-	 			open.isShowFin = vm.nIsHonsen ?  true : false;
+	 			vm.isShowFin = vm.nIsHonsen ?  true : false;
 	 			break;
 	 		case 4:
-	 			open.isShowFin = false;
+	 			vm.isShowFin = false;
 				vm.isShowResult = true;
 				break;
 	 	}
@@ -2670,7 +2610,7 @@ function open_showTreeTable(){
 				vm.isShowResult = true;
 				break;
 	 	}
-	 	open.isShowFin = false;
+	 	vm.isShowFin = false;
 	 }
 	 open_procShowTreeTable();
 }
@@ -3427,28 +3367,12 @@ function getLeagueTable(players){
 function open_setLeagueTable(){
 	open_get_entryNum();
 	if (vm.entryNum/open.groups>12){
-		//intel.xdk.player.playSound("sounds/error.mp3");
-		//$("#afui").popup(msg(30));
-		//$.ui.loadContent("#page_vm.FORMAT",false,false,"slide");
-		var alertPopup = $ionicPopup.alert({
-	     	title: 'Alert',
-	     	template: M[13]
-	   	});
-	   	alertPopup.then(function(res) {
-   			location.href="#/vm.FORMAT";
- 			});
+		alert(M[13]);
+		gotoHome();
 		return;
 	} else if (vm.entryNum/open.groups<3){
-		//intel.xdk.player.playSound("sounds/error.mp3");
-		//$("#afui").popup(msg(31));
-		//$.ui.loadContent("#page_vm.FORMAT",false,false,"slide");
-		var alertPopup = $ionicPopup.alert({
-	     	title: 'Alert',
-	     	template: M[14]
-	   	});
-	   	alertPopup.then(function(res) {
-   			location.href="#/vm.FORMAT";
- 			});
+		alert(M[14]);
+		gotoHome();
 		return;
 	}
 	group = new Array(open.groups);
@@ -3560,18 +3484,18 @@ function showLeagueTable(){
 	if (flg==false){
 	 	switch (vm.FORMAT.STATUS){
 	 		case 0:
-	 			open.isShowFin = false;
+	 			vm.isShowFin = false;
 	 		case 1:
-	 			open.isShowFin = vm.nIsHonsen ?  false : true;
+	 			vm.isShowFin = vm.nIsHonsen ?  false : true;
 	 			break;
 	 		case 2:
-	 			open.isShowFin = false;
+	 			vm.isShowFin = false;
 	 			break;
 	 		case 3:
-	 			open.isShowFin = vm.nIsHonsen ?  true : false;
+	 			vm.isShowFin = vm.nIsHonsen ?  true : false;
 	 			break;
 	 		case 4:
-	 			open.isShowFin = false;
+	 			vm.isShowFin = false;
 				vm.isShowResult = true;
 				break;
 	 	}
@@ -3596,7 +3520,7 @@ function showLeagueTable(){
 				vm.isShowResult = true;
 				break;
 	 	}
-	 	open.isShowFin = false;
+	 	vm.isShowFin = false;
 	 	open.isFin = false;
 	 }
 	 procShowLeagueTable();

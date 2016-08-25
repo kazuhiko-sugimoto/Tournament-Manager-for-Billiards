@@ -14,7 +14,7 @@ function init_index(){
   index.entries = [];
   var debug_cnt = 0;
   ENTRY({T_CD:{'==':t_cd}}).each(function (r) {
-    if (debug_cnt<64){
+    if (debug_cnt<8){
      index.entries.push({
        NAME: r.NAME,
        SKILL: r.SKILL,

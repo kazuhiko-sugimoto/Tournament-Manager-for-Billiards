@@ -16,7 +16,7 @@
         <button v-show="nHistory" class="btn btn-default" onclick="click_outputPdf();">
           <span class="icon icon-download"></span>
         </button>
-        <button v-show="isShowShuffle" class="btn btn-default" onclick="click_shuffle();">
+        <button v-show="isShowShuffle" class="btn btn-default" onclick="open_click_shuffle();">
           <span class="icon icon-shuffle"></span>
         </button>
         <button v-show="isShowReset" class="btn btn-default" onclick="click_tReset();">
@@ -36,13 +36,13 @@
       <button v-show="isShowOpen" class="btn btn-primary pull-right" onclick="open_click_open();">
         Start
       </button>
-      <button class="btn btn-primary pull-right" style="display:none;" onclick="click_yFin();">
+      <!--<button class="btn btn-primary pull-right" style="display:none;" onclick="click_yFin();">
         {{ W[38] }}
-      </button>
-      <button v-show="isShowFin" class="btn btn-primary pull-right" onclick="click_hFin();">
+      </button>-->
+      <button v-show="isShowFin" class="btn btn-primary pull-right" onclick="open_click_Fin();">
         {{ W[39] }}
       </button>
-      <button v-show="isShowResult" class="btn btn-primary pull-right" onclick="click_showTotalResult();">
+      <button v-show="isShowResult" class="btn btn-primary pull-right" onclick="open_click_showTotalResult();">
         {{ W[40] }}
       </button>
       <button v-show="!isShowOpen && !isShowResult && FORMAT.STATUS!=2 && FORMAT.STATUS!=4 && nHistory==0" class="btn btn-warning pull-right" onclick='open_click_undoGame();'>
