@@ -39,8 +39,7 @@ format.init = function(){
         H_HANDY4: r.H_HANDY4,
         H_HANDY5: r.H_HANDY5,
         H_THIRD: r.H_THIRD,
-        Y_STATUS: r.Y_STATUS,
-        H_STATUS: r.H_STATUS
+        STATUS: r.STATUS
       }
     })
   } else {
@@ -69,8 +68,7 @@ format.init = function(){
         H_HANDY4: 6,
         H_HANDY5: 7,
         H_THIRD: 1,
-        Y_STATUS: null,
-        H_STATUS: null
+        STATUS: 0
       }
     })
   }
@@ -183,28 +181,27 @@ format.save = function(){
   FORMAT({CD:{'==':t_cd}}).remove();
   FORMAT.insert(
       {
-        CD: t_cd,
+        CD: parseInt(t_cd),
         NAME: name,
-        GAME: game,
-        Y_TYPE: y_type,
-        Y_GROUPS: y_groups,
-        Y_HANDY0: y_handy0,
-        Y_HANDY1: y_handy1,
-        Y_HANDY2: y_handy2,
-        Y_HANDY3: y_handy3,
-        Y_HANDY4: y_handy4,
-        Y_HANDY5: y_handy5,
-        H_NUMBER: h_number,
-        H_TYPE: h_type,
-        H_HANDY0: h_handy0,
-        H_HANDY1: h_handy1,
-        H_HANDY2: h_handy2,
-        H_HANDY3: h_handy3,
-        H_HANDY4: h_handy4,
-        H_HANDY5: h_handy5,
-        H_THIRD: h_third,
-        Y_STATUS: format.vm.Y_STATUS,
-        H_STATUS: format.vm.H_STATUS
+        GAME: parseInt(game),
+        Y_TYPE: parseInt(y_type),
+        Y_GROUPS: parseInt(y_groups),
+        Y_HANDY0: parseInt(y_handy0),
+        Y_HANDY1: parseInt(y_handy1),
+        Y_HANDY2: parseInt(y_handy2),
+        Y_HANDY3: parseInt(y_handy3),
+        Y_HANDY4: parseInt(y_handy4),
+        Y_HANDY5: parseInt(y_handy5),
+        H_NUMBER: parseInt(h_number),
+        H_TYPE: parseInt(h_type),
+        H_HANDY0: parseInt(h_handy0),
+        H_HANDY1: parseInt(h_handy1),
+        H_HANDY2: parseInt(h_handy2),
+        H_HANDY3: parseInt(h_handy3),
+        H_HANDY4: parseInt(h_handy4),
+        H_HANDY5: parseInt(h_handy5),
+        H_THIRD: parseInt(h_third),
+        STATUS: 0 //parseInt(format.vm.STATUS)
     }
   );
   alert(M[2]);

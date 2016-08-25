@@ -1,0 +1,24 @@
+<div id="showAutoList" style="height:400px; overflow: auto;">
+    <ul class="list-group">
+      <li v-for="list in autoLists" class="list-group-item">
+        <div style="color:{{colors[list.tabNo]}}; float:left;">Field {{ list.tabNo+1 }}</div>
+        <div style="float:right;">{{list.level}}</div>
+        <table class="table-striped">
+          <tr>
+          	<td>
+          		<table><tr>
+          			<td>{{list.player1}}{{ list.memo1 ? "(" + list.memo1 + ")" : "" }}</td>
+          			<td>《{{list.handy1}}》</td>
+          		</tr></table>
+          	</td>
+          	<td>vs</td>
+          	<td>
+          		<table><tr>
+          			<td>{{list.player2}}{{ list.memo2 ? "(" + list.memo2 + ")" : "" }}</td>
+          			<td>《{{list.handy2}}》</td>
+          		</tr></table>
+          	</td>
+        </tr></table>
+      </li>
+    </ul>
+</div>

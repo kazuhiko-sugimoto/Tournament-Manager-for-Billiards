@@ -1,5 +1,8 @@
 var FORMAT = TAFFY();
 var ENTRY = TAFFY();
+var TABLE = TAFFY();
+var TREE = TAFFY();
+var LEAGUE = TAFFY();
 
 var db={};
 
@@ -9,6 +12,9 @@ db.base_url = 'https://kazu-software-com.ssl-xserver.jp/house_edition/cgi/cgi.ph
 db.getTAFFY = function(){
  	FORMAT.store("FORMAT");
   ENTRY.store("ENTRY");
+  TABLE.store("TABLE");
+  TREE.store("TREE");
+  LEAGUE.store("LEAGUE");
 }
 
 db.cgi = function(param){

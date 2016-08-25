@@ -1,0 +1,42 @@
+<!--<div class="modal-content" style="height:500px;">-->
+<!--<div class="panel" title="openpop" data-nav="none" id="page_openpop" data-load="openpop_onLoad" modal="false" style="">-->
+
+    <img  src="img/old_frame.jpg" style="position:absolute; width:570px; height:400px;" onclick="openpop_click_start();"/>
+    <div id="openpop_div" on-tap="openpop_click_start();">
+        <div id="openpop_date">{{ date }}</div>
+        <div id="openpop_name">{{ name }}</div>
+        <div id="openpop_YH">{{ yh }}</div>
+    </div>
+<!--</div>-->
+<style>
+	#openpop_div{
+	font-family: "Cochin", sans-serif;
+	font-size:30px;
+	font-style:italic;
+	color:black;
+	height:400px;
+  width:570px;
+}
+
+#openpop_date{
+	position:absolute;
+	top:100px;
+	width:570px;
+	text-align:center;
+}
+
+#openpop_name{
+	position:absolute;
+	top:200px;
+	width:570px;
+	text-align:center;
+}
+
+#openpop_YH{
+	position:absolute;
+	top:300px;
+	width:570px;
+	text-align:center;
+}
+
+</style>

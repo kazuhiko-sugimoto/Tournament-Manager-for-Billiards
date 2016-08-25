@@ -1,0 +1,23 @@
+<div id="score">
+  <table style="width:100%; text-align:center;">
+  	<tr>
+  		<td id="result_player1" style="width:50%;">{{ name1 }}{{ hall1? "(" + hall1 + ")" : ""}}</td>
+  		<td id="result_player2" style="width:50%;">{{ name2 }}{{ hall2? "(" + hall2 + ")" : ""}}</td>
+  	</tr>
+  	<tr>
+  		<td>
+  			<select id="result_score1" class="form-control" style="color:black;" v-model="score1" onchange="score_change_score();">
+          <option v-for="score in scores1" value="{{ score.val }}">{{ score.text }}</option>
+        </select>
+  		</td>
+  		<td>
+  			<select id="result_score2" class="form-control" style="color:black;" v-model="score2" onchange="score_change_score();">
+          <option v-for="score in scores2" value="{{ score.val }}">{{ score.text }}</option>
+        </select>
+  		</td>
+  	</tr>
+  </table>
+  <br>
+  <button id="okBtn_setResult" v-show="isShow_okBtn" style="float:right;" onclick="score_click_setGame();">OK</button>
+  <button style="float:left;" onclick="score_click_resetGame();">試合取消</button>
+</div>

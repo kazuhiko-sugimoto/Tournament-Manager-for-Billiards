@@ -40,12 +40,37 @@ function japanese(){
 	W[35] = "フォーマット";
 	W[36] = "履歴";
 	W[37] = "フォーマット未設定";
+	W[38] = "本戦開始";
+	W[39] = "試合確定";
+	W[40] = "最終結果";
+	W[41] = "勝者ゾーン";
+	W[42] = "敗者ゾーン";
+	W[43] = "決勝戦";
+	W[44] = "プレーオフ";
+	W[45] = "3位決定戦";
+	W[46] = "回戦";
+	W[47] = "不戦敗";
+	W[48] = "確定試合取消";
 
 	M[0] = "12バイト以内で入力して下さい。";
 	M[1] = "値が不正です。";
 	M[2] = "保存しました。";
 	M[3] = "20字以内で入力して下さい。";
 	M[4] = "必須項目が未入力です。";
+	M[5] = "予選は本戦進出人数の2倍のエントリーが必要です。";
+	M[6] = "エントリー人数は最低4人必要です。";
+	M[7] = "を削除してよろしいですか?";
+	M[8] = "予選結果を確定してもよろしいですか？";
+	M[9] = "試合結果を確定してもよろしいですか？";
+	M[10] = "使用可に変更しました。";
+	M[11] = "使用不可に変更しました。";
+	M[12] = "試合結果を取り消してよろしいですか？";
+	M[13] = "1グループの上限は12人までです";
+	M[14] = "1グループの下限は3人以上です";
+	M[15] = "の本戦進出者を決定してください";
+	M[16] = "エントリーの上限は64人までです";
+	M[17] = "同名の選手がすでに存在します。";
+	M[18] = "削除してよろしいですか?";
 
  }
 
@@ -88,10 +113,35 @@ function english(){
 	W[35] = "Format";
 	W[36] = "History";
 	W[37] = "Format is not set";
+	W[38] = "Start Finals";
+	W[39] = "define";
+	W[40] = "final result";
+	W[41] = "winner zone";
+	W[42] = "looser zone";
+	W[43] = "the final";
+	W[44] = "play-off";
+	W[45] = "3rd play-off";
+	W[46] = "round";
+	W[47] = "lose without fight";
+	W[48] = "Undo definite game";
 
 	M[0] = "Enter up to 12 bytes.";
 	M[1] = "Invalid value.";
 	M[2] = "saved.";
 	M[3] = "Enter within 20 characters.";
 	M[4] = "Required items are not entered.";
+	M[5] = "It needs twice of Finalists number.";
+	M[6] = "At least four people are needed for entry.";
+	M[7] = ", are you sure to delete?";
+	M[8] = "Do you define qualifier result?";
+	M[9] = "Do you define tournament game?";
+	M[10] = "Enabled done.";
+	M[11] = "Disabled done.";
+	M[12] = "Are you sure to undo this game?";
+	M[13] = "The maximum number in a group is 12.";
+	M[14] = "At least three people are needed for a group.";
+	M[15] = ", could you please confirm finalists.";
+	M[16] = "The maximum entry number is 64.";
+	M[17] = "That already exists.";
+	M[18] = "Do you remove sure?";
 }

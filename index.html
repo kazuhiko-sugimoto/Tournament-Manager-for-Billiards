@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Sample</title>
+  <title>Tournament Manager for Pool</title>
   <link type="text/css" rel="stylesheet" href="css/photon.min.css"  media="screen,projection"/>
   <link rel="stylesheet" href="./css/jquery-ui.min.css"></link>
   <script type="text/javascript" charset="utf-8" src="./js/master.js"></script>
@@ -13,10 +13,11 @@
   <script type="text/javascript" charset="utf-8" src="./js/language.js"></script>
   <script type="text/javascript" charset="utf-8" src="./js/db.js"></script>
   <script type="text/javascript" charset="utf-8" src="./js/format.js"></script>
-  <script type="text/javascript" charset="utf-8" src="./js/edit_player.js"></script>
+  <script type="text/javascript" charset="utf-8" src="./js/open.js"></script>
   <script type="text/javascript">
 
       $(document).ready(function(){
+        //window.localStorage.clear();
         getLocalStorage();
         //nLang = 1;
         if (nLang){
@@ -26,6 +27,12 @@
         }
         db.getTAFFY();
         page_show("title", init_index);
+      });
+
+
+      $(window).resize(function() {
+          var wk_width = getBrowserWidth();
+          $('#canvas').css("height",wk_width*1.3);
       });
    </script>
 </head>

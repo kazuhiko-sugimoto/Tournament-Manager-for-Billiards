@@ -3,17 +3,6 @@ var _ = require('./js/underscore-min');
 
 var sSkill = new Array("bg","C","B","A","SA","PRO");
 
-var sCountry;
-var isHall;
-var nHall;
-var sHall;
-var nArea;
-var sArea;
-var nPlayer;
-var sPlayer;
-var sPassword;
-var sCountryList = [];
-var sCountryFullNameList = [];
 var nScore = [];
 
 var sPage;    //移動先ページ名
@@ -22,10 +11,8 @@ var webRoot = "/";
 
 var nLang = 1;	//0:english 1:japanese
 var callBack;
-
-var isShowFab;
-
 var t_cd;
+var mnHistory;
 //  *******************************************************
 //  *** *** *** *** ***     class       *** *** *** *** ***
 //  *******************************************************
@@ -287,7 +274,7 @@ function msg(type, msg){
 			break;
 	};
 	//alert(msg);
-	Materialize.toast(msg, 4000);
+	alert(msg);
 	/*_.delay(function(){
 		msg_callback(msg);
 	}, 510);*/
@@ -368,132 +355,10 @@ function gotoHome(){
 function goto(page_name){
 	isMoving = false;
 	switch (page_name){
-		case "versus":
-			page_show(page_name, init_versus);
+		case "open":
+			page_show(page_name, init_open);
 			break;
-		case "select_japan":
-			page_show(page_name,init_selectJapan);
-			break;
-		case "japan":
-			page_show(page_name,init_japan);
-			break;
-		case "billboard":
-			if (checkConnection()){
-				page_show(page_name,init_billboard);
-			}
-			break;
-
-        //add 2015.1.3
-        case "select_data":
-            if (checkConnection()){
-				page_show(page_name,init_dataSelect);
-			}
-            break;
-        case "analize":
-            if (checkConnection()){
-				page_show(page_name,init_analize);
-			}
-            break;
-
-        case "data":
-			if (checkConnection()){
-                //update apa
-				page_show(page_name,init_data);
-                //page_show(page_name,data.click_type);
-			}
-			break;
-		case "practice":
-			page_show(page_name,init_practice);
-			break;
-		case "rotation":
-			page_show(page_name,init_rotation);
-			break;
-		case "select_player":
-			page_show(page_name,init_selectPlayer);
-			break;
-		case "select_taiwan":
-			page_show(page_name,init_select_taiwan);
-			break;
-		case "set_match":
-			page_show(page_name,init_set_match);
-			break;
-		case "settings":
-			page_show(page_name,init_settings);
-			break;
-		case "straightpool":
-			page_show(page_name,init_straightPool);
-			break;
-		case "taiwan":
-			page_show(page_name,init_taiwan);
-			break;
-		case "bowlard":
-			page_show(page_name,init_bowlard);
-			break;
-		case "csrs":
-			page_show(page_name,init_csrs);
-			break;
-		case "worldranking":
-			if (checkConnection()){
-				page_show(page_name,init_worldranking);
-			}
-			break;
-		case "analize":
-			if (checkConnection()){
-				page_show(page_name,init_analize);
-			}
-			break;
-		case "statistics":
-			if (checkConnection()){
-				page_show(page_name,init_statistics);
-			}
-			break;
-		case "one_pocket":
-			page_show(page_name,init_op);
-			break;
-		case "fujiyama":
-			page_show(page_name,init_fujiyama);
-			break;
-		case "wait_tournament":
-			page_show(page_name,init_waitTournament);
-			break;
-		case "sponsor":
-			if (checkConnection()){
-				page_show(page_name,init_sponsor);
-			}
-			break;
-		case "test":
-			page_show(page_name,null);
-			break;
-
-		//add apa
-		case "select_apa":
-			page_show(page_name,init_selectApa);
-			break;
-		case "apa9":
-			page_show(page_name,init_apa9);
-			break;
-
-        //add ver5.01
-        case "apa8":
-			page_show(page_name,init_apa8);
-			break;
-
-        //add ver5.03
-        case "kairun":
-			page_show(page_name,init_kairun);
-			break;
-		case "login":
-			if (checkConnection()){
-				page_show(page_name,init_login);
-			}
-			break;
-		case "snooker":
-			page_show(page_name,init_snooker);
-			break;
-
 	}
-	/*$("body").on('swiperight', open_sidebar);
-    $("body").on('swipeleft', close_sidebar);*/
 }
 
 //  *******************************************************
@@ -579,28 +444,17 @@ function fncSetJSON(object,item){
 	localStorage.setItem(item, nativeJSON);
 }
 function getLocalStorage(){
-	nHall = parseInt(window.localStorage.getItem("nHall") || -1);
-	sCountry = window.localStorage.getItem("sCountry");
-	nArea = parseInt(window.localStorage.getItem("nArea") || 0);
-	nPlayer = parseInt(window.localStorage.getItem("nPlayer") || -1);
 	var lang;
 	var nav_language = window.navigator.userLanguage || window.navigator.language || window.navigator.browserLanguage;
 	if  (nav_language.indexOf("ja")>=0){
         lang=1;
-        if (!sCountry) sCountry="jp";
     } else {
     	lang=0;
     }
 	nLang = parseInt(window.localStorage.getItem("nLang") || lang);
-	sPassword = window.localStorage.getItem("sPassword");
 }
 function setLocalStorage(){
-	window.localStorage.setItem("nHall",nHall);
-	window.localStorage.setItem("sCountry",sCountry);
-	window.localStorage.setItem("nArea",nArea);
-	window.localStorage.setItem("nPlayer",nPlayer);
 	window.localStorage.setItem("nLang",nLang);
-	window.localStorage.setItem("sPassword",sPassword);
 }
 function getDiv0(s, d){
 	if (d!=0 && isNaN(d)!=true){

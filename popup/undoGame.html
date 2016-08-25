@@ -1,0 +1,23 @@
+<div id="undoGame" style="height:400px; overflow: auto;">
+  <ul class="list-group">
+    <li v-for="list in undoLists" class="list-group-item" onclick="open_click_undoList({{list.no}});">
+      <div>{{list.level}}</div>
+      <table class="table-striped">
+        <tr>
+          <td>
+            <table><tr>
+              <td>{{list.player1}}{{ list.memo1 ? "(" + list.memo1 + ")" : "" }}</td>
+              <td>《{{list.handy1}}》</td>
+            </tr></table>
+          </td>
+          <td>{{list.score1}}-{{list.score2}}</td>
+          <td>
+            <table><tr>
+              <td>{{list.player2}}{{ list.memo2 ? "(" + list.memo2 + ")" : "" }}</td>
+              <td>《{{list.handy2}}》</td>
+            </tr></table>
+          </td>
+      </tr></table>
+      </li>
+    </ul>
+</div>

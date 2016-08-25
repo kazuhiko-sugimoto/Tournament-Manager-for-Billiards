@@ -1,6 +1,6 @@
 <div id="entry" style="height:100%;">
   <header class="toolbar toolbar-header">
-    <h1 class="title">Tournament Manager for Pool</h1>
+    <h1 class="title">{{ NAME }}</h1>
 
     <div class="toolbar-actions">
       <div class="btn-group">
@@ -10,15 +10,29 @@
         </button>
       </div>
 
-      <button class="btn btn-default btn-dropdown pull-right">
+      <button class="btn btn-default">
         <span class="icon icon-folder"></span>
         {{ W[36] }}
       </button>
+
+      <div style="position:absolute; top: 20px; right:10px; width: 150px;">
+        <span class="radio" style="float:left;">
+          <label>
+            <input id="lang_en" type="radio" name="lang" onclick="index.clickLang(0);">
+            English
+          </label>
+        </span>
+        <span class="radio" style="float:right;">
+          <label>
+            <input id="lang_ja" type="radio" name="lang" onclick="index.clickLang(1);">
+            日本語
+          </label>
+        </span>
+      </div>
     </div>
   </header>
 
-  <h4>{{ NAME }}</h4>
-	<form id="form_entry" onsubmit="return false;" style="position:absolute; top: 100px; width:100%; bottom:50px; overflow: auto;">
+	<form id="form_entry" onsubmit="return false;" style="position:absolute; top: 60px; width:100%; bottom:50px; overflow: auto;">
 	   <table id="toTable" class="table-striped" width="750px">
        <thead>
          <tr>
@@ -55,14 +69,14 @@
               <input type="text" id="hall{{ index }}" v-model="entry.HALL" class="form-control" maxlength="12" placeholder="{{ M[0] }}">
             </td>
 			      <td class="ampm" ng-hide="H_TYPE==4">
-			        <select id="am_pm{{entry.CD}}" :disabled="Y_STATUS!=null" v-model="{{entry.AM_PM}}" class="form-control" onchange="change_hType();">
+			        <select id="am_pm{{entry.CD}}" :disabled="STATUS!=0" v-model="{{entry.AM_PM}}" class="form-control" onchange="change_hType();">
 								<option value='0'>{{ W[30] }}</option>
 								<option value='1'>{{ W[31] }}</option>
 								<option value='2'>{{ W[32] }}</option>
 							</select>
 			      </td>
 			      <td class='yosenHandy' v-show="Y_TYPE!=0">
-							<input type="number" :disabled="Y_STATUS!=null" id='yHandy{{ index }}' class="form-control" min='1' max='255' v-model="entry.Y_HANDY"  required/>
+							<input type="number" :disabled="STATUS!=0" id='yHandy{{ index }}' class="form-control" min='1' max='255' v-model="entry.Y_HANDY"  required/>
 						</td>
 						<td>
 							<input type='number' required id='hHandy{{ index }}' class="form-control" min='1' max='255' v-model="entry.H_HANDY" required/>
@@ -81,5 +95,5 @@
       </button>
 		</form>
     <button class="btn btn-form btn-default" style="position:absolute; bottom:10px; left:10px;" onclick="index.click_Save();">{{ W[33] }}</button>
-    <button class="btn btn-form btn-primary" style="position:absolute; bottom:10px; right:10px;" onclick="click_back('<? e(BASE_URL) ?>open/index.php')">{{ W[34] }}</button>
+    <button class="btn btn-form btn-primary" style="position:absolute; bottom:10px; right:10px;" onclick="index.click_Open();">{{ W[34] }}</button>
 </div>

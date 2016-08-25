@@ -1,0 +1,208 @@
+<div id="open" style="height:100%;">
+  <header class="toolbar toolbar-header">
+    <h1 class="title">{{ FORMAT.NAME }}</h1>
+
+    <div class="toolbar-actions">
+      <div class="btn-group">
+        <button class="btn btn-default" onclick="gotoHome();">
+          <span class="icon icon-left-open"></span>
+          Back
+        </button>
+      </div>
+      <div class="btn-group">
+        <button v-show="isShowSettings" class="btn btn-default" onclick="clickFormat();">
+          <span class="icon icon-cog"></span>
+        </button>
+        <button v-show="nHistory" class="btn btn-default" onclick="click_outputPdf();">
+          <span class="icon icon-download"></span>
+        </button>
+        <button v-show="isShowShuffle" class="btn btn-default" onclick="click_shuffle();">
+          <span class="icon icon-shuffle"></span>
+        </button>
+        <button v-show="isShowReset" class="btn btn-default" onclick="click_tReset();">
+          <span class="icon icon-trash"></span>
+        </button>
+      </div>
+
+      <div class="btn-group">
+        <button v-show="isShowNav0" class="btn btn-default" onclick="open_click_nav(0);">
+          {{ W[2]}}
+        </button>
+        <button v-show="isShowNav1" class="btn btn-default" onclick="open_click_nav(1);">
+          {{ W[15] }}
+        </button>
+      </div>
+
+      <button v-show="isShowOpen" class="btn btn-primary pull-right" onclick="open_click_open();">
+        Start
+      </button>
+      <button class="btn btn-primary pull-right" style="display:none;" onclick="click_yFin();">
+        {{ W[38] }}
+      </button>
+      <button v-show="isShowFin" class="btn btn-primary pull-right" onclick="click_hFin();">
+        {{ W[39] }}
+      </button>
+      <button v-show="isShowResult" class="btn btn-primary pull-right" onclick="click_showTotalResult();">
+        {{ W[40] }}
+      </button>
+      <button v-show="!isShowOpen && !isShowResult && FORMAT.STATUS!=2 && FORMAT.STATUS!=4 && nHistory==0" class="btn btn-warning pull-right" onclick='open_click_undoGame();'>
+        <span class="icon icon-ccw"></span>
+        Undo
+      </button>
+    </div>
+  </header>
+	<!--<h4>{{ NAME }}</h4>
+
+			<div id="after_head" style="display:none;">
+				<div id="t_condition" style="position:absolute; top:35px; left:35%; width:35%;"></div>
+				<button id="btnShuffle" style="position:absolute; top:30px; left:80%; display:none;" onclick="click_shuffle();">shuffle</button>
+				<button id="btnOpen" style="position:absolute; top:30px; left:90%; display:none;" onclick="click_open();">Start</button>
+				<button id="nav0" class="small nav_button_select" style="position:absolute; top:30px; left:60%; display:none;" onclick="click_nav(0);">予選</button>
+				<button id="nav1" class="small nav_button" style="position:absolute; top:30px; left:70%; display:none;" onclick="click_nav(1);">本戦</button>
+				<button id="t_reset" class="small nav_button_yellow" style="position:absolute; top:30px; left:80%;" onclick="click_tReset();">リセット</button>
+				<button id="y_fin" class="small nav_button_red" style="position:absolute; top:30px; left:90%; display:none;" onclick="click_yFin();">本戦開始</button>
+				<button id="h_fin" class="small nav_button_red" style="position:absolute; top:30px; left:90%; display:none;" onclick="click_hFin();">試合確定</button>
+				<button id="btnShowTotalResult" class="small nav_button_red" style="position:absolute; top:30px; left:90%; display:none;" onclick="click_showTotalResult();">最終結果</button>
+			</div>-->
+			<div style="position:absolute; top:60px; left:0%; width:100%; bottom:100px; text-align:center; overflow:auto;">
+				<canvas id="canvas" width="2000" height="2600" style="width:100%;"></canvas>
+				<div id="league" class="small dark"></div>
+			</div>
+
+			<div id="footArea" v-show="isShowFootArea">
+				<div style="position:absolute; bottom:0px; left:0px; right:40px; height:100px; overflow:auto;">
+					<div style="width:99%;">
+						<table style="width:100%;">
+              <tr>
+                <td style="width:20%;">
+									<fieldset id="table0" class="tableTab" style="width:100%; color:{{ colors[0] }};" onclick="open_click_tableTab(0);">
+										<legend>1</legend>
+										<div id="insideTable0">
+											<br><br><br>
+										</div>
+									</fieldset>
+								</td>
+                <td style="width:20%;">
+									<fieldset id="table1" class="tableTab" style="width:100%; color:{{ colors[1] }};" onclick="open_click_tableTab(1);">
+										<legend>2</legend>
+										<div id="insideTable1">
+											<br><br><br>
+										</div>
+									</fieldset>
+								</td>
+                <td style="width:20%;">
+									<fieldset id="table2" class="tableTab" style="width:100%; color:{{ colors[2] }};" onclick="open_click_tableTab(2);">
+										<legend>3</legend>
+										<div id="insideTable2">
+											<br><br><br>
+										</div>
+									</fieldset>
+								</td>
+                <td style="width:20%;">
+									<fieldset id="table3" class="tableTab" style="width:100%; color:{{ colors[3] }};" onclick="open_click_tableTab(3);">
+										<legend>4</legend>
+										<div id="insideTable3">
+											<br><br><br>
+										</div>
+									</fieldset>
+								</td>
+                <td style="width:20%;">
+									<fieldset id="table4" class="tableTab" style="width:100%; color:{{ colors[4] }};" onclick="open_click_tableTab(4);">
+										<legend>5</legend>
+										<div id="insideTable4">
+											<br><br><br>
+										</div>
+									</fieldset>
+								</td>
+							</tr>
+              <tr>
+                <td style="width:20%;">
+									<fieldset id="table5" class="tableTab" style="width:100%; color:{{ colors[5] }};" onclick="open_click_tableTab(5);">
+										<legend>6</legend>
+										<div id="insideTable5">
+											<br><br><br>
+										</div>
+									</fieldset>
+								</td>
+                <td style="width:20%;">
+									<fieldset id="table6" class="tableTab" style="width:100%; color:{{ colors[6] }};" onclick="open_click_tableTab(6);">
+										<legend>7</legend>
+										<div id="insideTable6">
+											<br><br><br>
+										</div>
+									</fieldset>
+								</td>
+                <td style="width:20%;">
+									<fieldset id="table7" class="tableTab" style="width:100%; color:{{ colors[7] }};" onclick="open_click_tableTab(7);">
+										<legend>8</legend>
+										<div id="insideTable7">
+											<br><br><br>
+										</div>
+									</fieldset>
+								</td>
+                <td style="width:20%;">
+									<fieldset id="table8" class="tableTab" style="width:100%; color:{{ colors[8] }};" onclick="open_click_tableTab(8);">
+										<legend>9</legend>
+										<div id="insideTable8">
+											<br><br><br>
+										</div>
+									</fieldset>
+								</td>
+                <td style="width:20%;">
+									<fieldset id="table9" class="tableTab" style="width:100%; color:{{ colors[9] }};" onclick="open_click_tableTab(9);">
+										<legend>10</legend>
+										<div id="insideTable9">
+											<br><br><br>
+										</div>
+									</fieldset>
+								</td>
+							</tr>
+            </table>
+					</div>
+				</div>
+				<button class="btn btn-default" style="position:absolute; bottom:0px; right:0px; width:40px; height:100px;" onclick="open_click_auto();">auto</button>
+			</div>
+</div>
+<script id="template_tab" type="text/html">
+  <table style='width:100%;'>
+    <tr>
+<%    if (tab.ZONE!=null){
+        var s="";
+        switch (tab.ZONE) {
+        case 0:
+        case 1:
+          if (vm.tType!=1){
+            if (tab.ZONE==0){
+              s="勝者側";
+            } else {
+              s="敗者側";
+            }
+          }
+          break;
+        case 2:
+          s="決勝戦";
+          break;
+        case 3:
+          s="プレーオフ";
+          break;
+        default:
+          s="3位決定戦";
+          break;
+        } %>
+      <td><%= s %></td>
+      <td><%= tab.ZONE<2? tab.LEVEL+"回戦" : "" %></td>
+<%    } else {  %>
+      <td>Group : <%= tab.GRP+1 %></td>
+      <td></td>
+<%    } %>
+    </tr>
+    <tr>
+      <td><%= tab.NAME1 %></td>
+      <td style='text-align:right;'><%= tab.HANDY1 %></td>
+    </tr>
+    <tr>
+      <td><%= tab.NAME2 %></td>
+      <td style='text-align:right;'><%= tab.HANDY2 %></td>
+    </tr>
+  </table>
+</script>

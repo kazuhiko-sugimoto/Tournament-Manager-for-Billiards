@@ -1656,6 +1656,6 @@ header .button {
   .top150{ top: 410px; }
 }*/
 
-#toast-container{
-	z-index:9999 !important;
+select {
+	color: black;
 }

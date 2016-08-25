@@ -24,7 +24,7 @@
 	          <tr>
 	            <td>{{ W[3] }}</td>
 	            <td>
-	              <select class="form-control" v-model="Y_TYPE" :disabled="Y_STATUS!=null">
+	              <select class="form-control" v-model="Y_TYPE" :disabled="STATUS!=0">
 	                <option value="0">{{ W[17] }}</option>
 	                <option value="1">{{ W[18] }}</option>
 	                <option value="3">{{ W[19] }}</option>
@@ -35,7 +35,7 @@
 	          <tr v-show="Y_TYPE!=0">
 	            <td>{{ W[4] }}</td>
 	            <td>
-	              <select class="form-control" v-model="H_NUMBER" :disabled="Y_STATUS!=null">
+	              <select class="form-control" v-model="H_NUMBER" :disabled="STATUS!=0">
 	                <option value="4">4</option>
 	                <option value="8">8</option>
 	                <option value="16">16</option>
@@ -45,7 +45,7 @@
 	          <tr v-show="Y_TYPE==4">
 	            <td>{{ W[5] }}</td>
 	            <td>
-	              <select class="form-control" v-model="Y_GROUPS" :disabled="Y_STATUS!=null">
+	              <select class="form-control" v-model="Y_GROUPS" :disabled="STATUS!=0">
 	                <option value="1">1</option>
 	                <option value="2">2</option>
 	                <option value="4">4</option>
@@ -63,13 +63,13 @@
 	          </tr>
 	          <tr>
 	            <td>
-	              <input id="y_handy0" type="number" :disabled="Y_STATUS!=null" required class="form-control" v-model="Y_HANDY0" min="0" max="255" />
+	              <input id="y_handy0" type="number" :disabled="STATUS!=0" required class="form-control" v-model="Y_HANDY0" min="0" max="255" />
 	            </td>
 	            <td>
-	              <input id="y_handy1" type="number" :disabled="Y_STATUS!=null" required class="form-control" v-model="Y_HANDY1" min="0" max="255" />
+	              <input id="y_handy1" type="number" :disabled="STATUS!=0" required class="form-control" v-model="Y_HANDY1" min="0" max="255" />
 	            </td>
 	            <td>
-	              <input id="y_handy2" type="number" :disabled="Y_STATUS!=null" required class="form-control" v-model="Y_HANDY2" min="0" max="255" />
+	              <input id="y_handy2" type="number" :disabled="STATUS!=0" required class="form-control" v-model="Y_HANDY2" min="0" max="255" />
 	            </td>
 	          </tr>
 	          <tr>
@@ -79,13 +79,13 @@
 	          </tr>
 	          <tr>
 	            <td>
-	              <input id="y_handy3" type="number" :disabled="Y_STATUS!=null" required class="form-control" v-model="Y_HANDY3" min="0" max="255" />
+	              <input id="y_handy3" type="number" :disabled="STATUS!=0" required class="form-control" v-model="Y_HANDY3" min="0" max="255" />
 	            </td>
 	            <td>
-	              <input id="y_handy4" type="number" :disabled="Y_STATUS!=null" required class="form-control" v-model="Y_HANDY4" min="0" max="255" />
+	              <input id="y_handy4" type="number" :disabled="STATUS!=0" required class="form-control" v-model="Y_HANDY4" min="0" max="255" />
 	            </td>
 	            <td>
-	              <input id="y_handy5" type="number" :disabled="Y_STATUS!=null" required class="form-control" v-model="Y_HANDY5" min="0" max="255" />
+	              <input id="y_handy5" type="number" :disabled="STATUS!=0" required class="form-control" v-model="Y_HANDY5" min="0" max="255" />
 	            </td>
 	          </tr>
 	        </table>
