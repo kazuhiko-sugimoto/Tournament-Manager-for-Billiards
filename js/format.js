@@ -201,7 +201,7 @@ format.save = function(){
         H_HANDY4: parseInt(h_handy4),
         H_HANDY5: parseInt(h_handy5),
         H_THIRD: parseInt(h_third),
-        STATUS: 0 //parseInt(format.vm.STATUS)
+        STATUS: parseInt(format.vm.STATUS)
     }
   );
   alert(M[2]);

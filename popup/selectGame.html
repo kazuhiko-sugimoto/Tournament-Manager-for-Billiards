@@ -1,5 +1,5 @@
-<div id="selectGame" style="height:400px; overflow: auto;">
-  <ul class="list-group">
+<div id="selectGame">
+  <ul class="list-group" style="height:400px; overflow: auto;">
     <li v-for="list in gameLists" class="list-group-item" onclick="open_click_nextList({{list.no}});">
       <div>{{list.level}}</div>
       <table class="table-striped">
@@ -20,4 +20,5 @@
       </tr></table>
 		  </li>
 		</ul>
+    <button class="btn btn-form btn-warning" onclick="hold_tableTab();">{{ W[49] }}</button>
 </div>

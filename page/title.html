@@ -37,12 +37,12 @@
        <thead>
          <tr>
 						<th width="30px"></th>
-						<th width="150px">{{ W[24] }}</th>
-						<th width="100px">{{ W[25] }}</th>
-						<th width="150px">{{ W[26] }}</th>
-						<th class='ampm' width="120px" v-show="H_TYPE!=4">{{ W[27] }}</th>
-						<th class='yosenHandy' width="100px" v-show="Y_TYPE!=0">{{ W[28] }}</th>
-						<th width="100px">{{ W[29] }}</th>
+						<th width="150px" onclick="index.th_click(1);">{{ W[24] }}</th>
+						<th width="100px" onclick="index.th_click(2);">{{ W[25] }}</th>
+						<th width="150px" onclick="index.th_click(3);">{{ W[26] }}</th>
+						<th class='ampm' width="120px" v-show="H_TYPE!=4" onclick="index.th_click(4);">{{ W[27] }}</th>
+						<th class='yosenHandy' width="100px" v-show="Y_TYPE!=0" onclick="index.th_click(5);">{{ W[28] }}</th>
+						<th width="100px" onclick="index.th_click(6);">{{ W[29] }}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -68,11 +68,11 @@
 			      <td>
               <input type="text" id="hall{{ index }}" v-model="entry.HALL" class="form-control" maxlength="12" placeholder="{{ M[0] }}">
             </td>
-			      <td class="ampm" ng-hide="H_TYPE==4">
-			        <select id="am_pm{{entry.CD}}" :disabled="STATUS!=0" v-model="{{entry.AM_PM}}" class="form-control" onchange="change_hType();">
-								<option value='0'>{{ W[30] }}</option>
-								<option value='1'>{{ W[31] }}</option>
-								<option value='2'>{{ W[32] }}</option>
+			      <td v-show="H_TYPE!=4">
+			        <select :disabled="STATUS!=0" v-model="entry.AM_PM" class="form-control">
+								<option value="0">{{ W[30] }}</option>
+								<option value="1">{{ W[31] }}</option>
+								<option value="2">{{ W[32] }}</option>
 							</select>
 			      </td>
 			      <td class='yosenHandy' v-show="Y_TYPE!=0">
@@ -89,7 +89,7 @@
         <span class="icon icon-plus"></span>
         {{ W[22] }}
       </button>
-      <button class="btn btn-default" style="float:left;" onclick="index.addRow();">
+      <button class="btn btn-default" style="float:left;" onclick="index.addByList();">
         <span class="icon icon-doc-text"></span>
         {{ W[23] }}
       </button>

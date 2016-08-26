@@ -64,8 +64,8 @@ function open_tree_def(player1, player2, from1, from2, x1, y1, x2, y2, zone, lev
 	this.score1 = score1;
 	this.score2 = score2;
 }
-function open_entry_def(P_CD,NAME,SKILL,PLAY,RANK,HALL){
-	this.P_CD =　P_CD;
+function open_entry_def(CD,NAME,SKILL,PLAY,RANK,HALL){
+	this.CD =　CD;
 	this.NAME =　NAME;
 	this.SKILL =　SKILL;
 	this.PLAY = PLAY;
@@ -114,14 +114,14 @@ function tab_def(ZONE,LEVEL,GRP,NO,PLAYER1, PLAYER2, NAME1, NAME2, HANDY1, HANDY
 }
 ///	///	///	///	///	///	///	///	///	///	/////				設定変更					///
 function init_open(){
-	format.init();
+	//format.init();
 	vm = new Vue({
     el: '#open',
     data: {
       W: W,
       M: M,
-      FORMAT: format.vm,
-      ENTRIES: index.vm.entries,
+      FORMAT: null,
+      ENTRIES: null,
       isShowFin: false,
 			isShowNav0: false,
 			isShowNav1: false,
@@ -133,25 +133,13 @@ function init_open(){
 			isShowFootArea: false,
 			nHistory: mnHistory,
 			entryNum: 0,
-			useTable: [],
+			useTable: [true,true,true,true,true,true,true,true,true,true],
 			tType: 0,
 			isSingle: true,
-			treeFormat: [],
 			nIsHonsen: 0,
 			colors: ["Royalblue","Crimson","Mediumorchid","Springgreen","Orange","Burlywood","hotpink","Yellowgreen","Mediumseagreen","Brown"]
     }
   });
-	open.treeFormat = [];
-	open.tree = [];
-	open.league = [];
-	open.line = [];
-	open.table_check = []; //new Array(128);
-	open.selectTab = null;
-	open.tableInfo = []; //new Array(10);
-	open.grpRank = [];	//グループ内順位
-	open.isFin = false;	//リーグ予選主終了
-	open.grp = 0; 	//リーグ戦選択グループ
-	open.result = [];
 
 	open.wTableNm = ["1","2","3","4","5","6","7","8","9","10"];
 	var r = TABLE().first();
@@ -160,6 +148,20 @@ function init_open(){
 		wTableEnabled = [r.TABLE1,r.TABLE2,r.TABLE3,r.TABLE4,r.TABLE5,r.TABLE6,r.TABLE7,r.TABLE8,r.TABLE9,r.TABLE10];
 	} else {
 		wTableEnabled = [true,true,true,true,true,true,true,true,true,true];
+		TABLE.insert(
+    {
+			TABLE1: true,
+			TABLE2: true ,
+			TABLE3: true ,
+			TABLE4: true ,
+			TABLE5: true ,
+			TABLE6: true ,
+			TABLE7: true ,
+			TABLE8: true ,
+			TABLE9: true ,
+			TABLE10: true
+			}
+		);
 	}
 	for (var i=0; i<10; i++){
 		$('#open_lblTable'+i).text(open.wTableNm[i]);
@@ -174,19 +176,63 @@ function init_open(){
 	canvas =document.getElementById('canvas');
   context =canvas.getContext('2d');
 
-  if ((vm.FORMAT.STATUS==0 && vm.FORMAT.Y_TYPE==0) || (vm.FORMAT.STATUS>=2)){
-    vm.nIsHonsen = 1;
-  } else {
-    vm.nIsHonsen = 0;
-  }
-  //open_getEntryData();
+	open_refresh();
+
+
+
+}
+function open_refresh(){
+	var entries = [];
+  ENTRY({T_CD:{'==':t_cd}}).each(function (r) {
+     entries.push({
+       CD: r.CD,
+       NAME: r.NAME,
+       SKILL: r.SKILL,
+       HALL: r.HALL,
+       Y_HANDY: r.Y_HANDY,
+       H_HANDY: r.H_HANDY,
+       AP_PM: r.AM_PM,
+       RANK: r.RANK
+     })
+		 console.debug(r.RANK);
+  });
+	vm.ENTRIES = entries;
+
+	format.init();
+	vm.FORMAT = format.vm;
+	vm.isShowFin = false;
+	vm.isShowNav0 =  false;
+	vm.isShowNav1 = false;
+	vm.isShowResult = false;
+	vm.isShowSettings = false;
+	vm.isShowShuffle = false;
+	vm.isShowOpen = false;
+	vm.isShowReset = false;
+	vm.isShowFootArea = false;
+
+	open.treeFormat = [];
+	open.tree = [];
+	open.league = [];
+	open.line = [];
+	open.table_check = []; //new Array(128);
+	open.selectTab = null;
+	open.tableInfo = []; //new Array(10);
+	open.grpRank = [];	//グループ内順位
+	//open.isFin = false;	//リーグ予選主終了
+	open.grp = 0; 	//リーグ戦選択グループ
+	open.result = [];
+	if ((vm.FORMAT.STATUS==0 && vm.FORMAT.Y_TYPE==0) || (vm.FORMAT.STATUS>=2)){
+		vm.nIsHonsen = 1;
+	} else {
+		vm.nIsHonsen = 0;
+	}
+	//open_getEntryData();
 
 	open_get_entryNum();
 
 	open_switch_nav(vm.nIsHonsen);
 
 	changeLayout();
-
 }
 function open_get_entryNum(){
 	if (vm.nIsHonsen==0){
@@ -250,12 +296,10 @@ function open_switch_nav(num){
 	} else if (vm.tType!=4) {
 		if ((vm.FORMAT.STATUS==0 && (vm.nIsHonsen==0 || (vm.nIsHonsen==1 && vm.FORMAT.Y_TYPE==0))) || (vm.FORMAT.STATUS==2 && vm.nIsHonsen==1)){
 			open_initTreeTable();
-
 			open_setTreeTable(wHonsen);
 
 		} else {
 			open_resetInGame();
-			//getData( "open/resetInGame", {type: vm.tType, cd: t_cd, honsen: vm.nIsHonsen}, fncNone,false );
 		}
 		open_showTreeTable();
 
@@ -350,7 +394,6 @@ function open_click_open(){
 }
 //予選・本戦切り替え
 function open_click_nav(num){
-	//intel.xdk.player.playSound("sounds/switch.mp3");
 	vm.nIsHonsen = num;
 	vm.nIsHonsen = num;
 	open_get_entryNum();
@@ -409,12 +452,12 @@ function open_proc_tReset(){
 	}
 
 	if (open.nHistory==0){
-		open_onLoad();
-		open.modal_navOpen.hide();
+		init_open();
+		//open.modal_navOpen.hide();
 		//location.href="#/open";
 	} else {
-		open.modal_navOpen.hide();
-		location.href="#/title";
+		//open.modal_navOpen.hide();
+		gotoHome();
 
 	}
 	//getData( "open/resetTournament", {type: vm.tType, cd: t_cd, honsen: vm.nIsHonsen, h_number: wHonsenNum}, suucessFnc_open_proc_tReset,true );
@@ -571,7 +614,6 @@ function open_click_yFin(){
 	}
 }
 function open_proc_click_yFin(){
-
 	var wRankList = [];
 	var wLevel = 0;
 	var wRank;
@@ -592,7 +634,7 @@ function open_proc_click_yFin(){
 			} else {
 				wLooser = open.tree[i].player1;
 			}
-			wRankList[wLooser] = new rank_def(vm.ENTRIES[wLooser].P_CD, wRank);
+			wRankList[wLooser] = new rank_def(vm.ENTRIES[wLooser].CD, wRank);
 		}
 		break;
 	case 2:
@@ -613,7 +655,7 @@ function open_proc_click_yFin(){
 				} else {
 					wLooser = open.tree[i].player1;
 				}
-				wRankList[wLooser] = new rank_def(vm.ENTRIES[wLooser].P_CD, wRank);
+				wRankList[wLooser] = new rank_def(vm.ENTRIES[wLooser].CD, wRank);
 				tmpRank++;
 			}
 		}
@@ -651,7 +693,7 @@ function open_proc_click_yFin(){
 				wRank = j+1+parseInt(vm.FORMAT['H_NUMBER']);
 				saveMax = wMax;
 			}
-			wRankList[wMaxPlayer] = new rank_def(vm.ENTRIES[wMaxPlayer].P_CD, wRank);
+			wRankList[wMaxPlayer] = new rank_def(vm.ENTRIES[wMaxPlayer].CD, wRank);
 		}
 		break;
 	}
@@ -660,7 +702,8 @@ function open_proc_click_yFin(){
 	//intel.xdk.player.playSound("sounds/info.mp3");
 	open_setRanking(wRankList);
 	vm.nIsHonsen=1;
-	init_open();
+	//init_open();
+	open_refresh();
 
 }
 function suucess_open_click_yFin(d){
@@ -705,17 +748,17 @@ function open_proc_click_hFin(){
 			}
 			if (open.tree[i].zone==2){
 				//決勝
-				wRankList[wWinner] = new rank_def(vm.ENTRIES[wWinner].P_CD, 1);
-				wRankList[wLooser] = new rank_def(vm.ENTRIES[wLooser].P_CD, 2);
+				wRankList[wWinner] = new rank_def(vm.ENTRIES[wWinner].CD, 1);
+				wRankList[wLooser] = new rank_def(vm.ENTRIES[wLooser].CD, 2);
 			} else if (open.tree[i].zone==4){
 				//3位決定戦
 				fourth = wLooser;
 			} else {
-				wRankList[wLooser] = new rank_def(vm.ENTRIES[wLooser].P_CD, wRank);
+				wRankList[wLooser] = new rank_def(vm.ENTRIES[wLooser].CD, wRank);
 			}
 		}
 		if (fourth>=0){
-			wRankList[fourth] = new rank_def(vm.ENTRIES[fourth].P_CD, 4);
+			wRankList[fourth] = new rank_def(vm.ENTRIES[fourth].CD, 4);
 		}
 		break;
 	case 2:
@@ -742,17 +785,17 @@ function open_proc_click_hFin(){
 				}
 				if (open.tree[i].zone==2){
 					//決勝
-					wRankList[wWinner] = new rank_def(vm.ENTRIES[wWinner].P_CD, 1);
-					wRankList[wLooser] = new rank_def(vm.ENTRIES[wLooser].P_CD, 2);
+					wRankList[wWinner] = new rank_def(vm.ENTRIES[wWinner].CD, 1);
+					wRankList[wLooser] = new rank_def(vm.ENTRIES[wLooser].CD, 2);
 					tmpRank=3;
 				} else if (open.tree[i].zone==3){
 					//プレーオフ
-					wRankList[wWinner] = new rank_def(vm.ENTRIES[wWinner].P_CD, 1);
-					wRankList[wLooser] = new rank_def(vm.ENTRIES[wLooser].P_CD, 2);
+					wRankList[wWinner] = new rank_def(vm.ENTRIES[wWinner].CD, 1);
+					wRankList[wLooser] = new rank_def(vm.ENTRIES[wLooser].CD, 2);
 					tmpRank=3;
 					i--;
 				} else {
-					wRankList[wLooser] = new rank_def(vm.ENTRIES[wLooser].P_CD, wRank);
+					wRankList[wLooser] = new rank_def(vm.ENTRIES[wLooser].CD, wRank);
 					tmpRank++;
 				}
 
@@ -788,7 +831,7 @@ function open_proc_click_hFin(){
 				wRank = j+1;
 				saveMax = wMax;
 			}
-			wRankList[wMaxPlayer] = new rank_def(vm.ENTRIES[wMaxPlayer].P_CD, wRank);
+			wRankList[wMaxPlayer] = new rank_def(vm.ENTRIES[wMaxPlayer].CD, wRank);
 
 		}
 		break;
@@ -804,6 +847,7 @@ function open_proc_click_hFin(){
 
 }
 function open_setRanking(list){
+	console.debug(list);
 	var wstatus;
 	if (vm.nIsHonsen==0){
 		wstatus = 2;
@@ -817,12 +861,11 @@ function open_setRanking(list){
 	});
 	for (var i=0; i<list.length; i++){
 		if (list[i]){
-			ENTRY({T_CD:{'==':t_cd}, P_CD:{'==':list[i].player}}).update({
+			ENTRY({T_CD:{'==':t_cd}, CD:{'==':list[i].player}}).update({
 				RANK:list[i].rank
 			});
 		}
 	}
-	vm.FORMAT.STATUS = wstatus;
 	vm.FORMAT.STATUS = wstatus;
 }
 function open_click_showTotalResult(){
@@ -874,7 +917,8 @@ function open_setEnabledTable(num,flg){
 		TABLE10:vm.useTable[9]
 	})
 }
-function hold_tableTab(num){
+function hold_tableTab(){
+	num = open.selectTab;
 	if (vm.useTable[num]==false){
 
 		open_setEnabledTable(num,true);
@@ -882,7 +926,8 @@ function hold_tableTab(num){
 	} else {
 		if (open.tableInfo[num]) return;
 		open_click_disabledTable(num);
-		alert(M[11]);
+		//alert(M[11]);
+		popup_hide("selectGame");
 	}
 }
 function open_click_tableTab(num){
@@ -894,14 +939,17 @@ function open_click_tableTab(num){
 		open_showPop_setResult();
 
 	} else {
-		//試合セット
-		//property = {cd:t_cd, honsen:vm.nIsHonsen, proc:"show"};
-		//showPopFrame("open/nextList",{type:vm.tType, cd:t_cd, honsen:vm.nIsHonsen, proc:"show"},450, suucessFnc_open_click_tableTab, true, "試合選択");
-		open_showPop_nextList();
+		if (vm.useTable[num]){
+			//試合セット
+			//property = {cd:t_cd, honsen:vm.nIsHonsen, proc:"show"};
+			//showPopFrame("open/nextList",{type:vm.tType, cd:t_cd, honsen:vm.nIsHonsen, proc:"show"},450, suucessFnc_open_click_tableTab, true, "試合選択");
+			open_showPop_nextList();
+		} else {
+			hold_tableTab();
+		}
 	}
 }
 function open_click_disabledTable(num){
-	//intel.xdk.player.playSound("sounds/error.mp3");
 	open_setEnabledTable(num,false);
 }
 function open_click_auto(){
@@ -1116,7 +1164,8 @@ function selectGamePop_callback(){
 	new Vue({
 		el: '#selectGame',
 		data: {
-			gameLists: gameLists
+			gameLists: gameLists,
+			W: W
 		}
 	})
 }
@@ -1142,6 +1191,7 @@ function open_save_Table(paramT){
 				,LEVEL:paramT[i].level==null ? 1: paramT[i].level
 				,SCORE1:paramT[i].score1
 				,SCORE2:paramT[i].score2
+				,X_CENTER: x_center
 			});
 		}
 	} else {
@@ -1259,7 +1309,7 @@ function uploadEntry(keycode){
 	var entry = [];
 	ENTRY({T_CD:{'==':t_cd}}).each(function (r) {
 	    entry.push({
-	   		P_CD: r.CD,
+	   		CD: r.CD,
 	   		NAME: r.NAME,
 	   		SKILL: r.SKILL,
 	   		HALL: r.HALL,
@@ -2550,6 +2600,8 @@ function open_showTreeTable(){
 		open.tree[i].zone = r.ZONE;
 		open.tree[i].level = r.LEVEL;
 
+		x_center = r.X_CENTER;
+
 		if (open.tree[i].player1!=null && open.tree[i].player2!=null){
 			if ((open.tree[i].score1==null && open.tree[i].score2==null) ||
 				(open.tree[i].score1==0 && open.tree[i].score2==0)){
@@ -2615,7 +2667,7 @@ function open_showTreeTable(){
 	 open_procShowTreeTable();
 }
 function open_procShowTreeTable(){
-
+	console.debug("center", x_center);
 	//var x_scale = 1600/19;
 	//var y_scale = 32;
 	var y_base = 60;
@@ -3856,14 +3908,11 @@ function open_getPlayColor(num){
 	case 6:
 	case 7:
 	case 8:
-		color = vm.colors[num];
-		//color="Royalblue";
-		break;
 	case 9:
-		color="Brown";
+		color = vm.colors[num];
 		break;
 	case -1:
-		color="Lightgrey";
+		color="grey";
 		break;
 	default:
 		color="black";
@@ -3973,6 +4022,8 @@ function open_getHandy(player){
 }
 function open_shuffle(IsLeague){
 	var w_chk = new Array(vm.entryNum);
+	var am_number = 0;
+	var pm_number = 0;
 
 	if (IsLeague==true){
 		for (var i=0; i<vm.ENTRIES.length; i++){
@@ -3987,12 +4038,53 @@ function open_shuffle(IsLeague){
 	} else {
 		if ((vm.FORMAT.Y_TYPE=="0" && vm.nIsHonsen==1) || (vm.nIsHonsen==0)){
 
-			for (var i=0; i<vm.ENTRIES.length; i++){
+			/*for (var i=0; i<vm.ENTRIES.length; i++){
 					var wnum;
 					do {
 						wnum = Math.floor(Math.random()*vm.ENTRIES.length);
 					} while (isNaN(w_chk[wnum])==false);
 					w_chk[wnum] = i;
+				}*/
+				for (var i=0; i<vm.ENTRIES.length; i++){
+					if (vm.ENTRIES[i].AM_PM==1){
+						//console.debug("am" + i);
+						am_number++;
+					} else if (vm.ENTRIES[i].AM_PM==2){
+						//console.debug("pm" + i);
+						pm_number++;
+					}
+				}
+
+				if (am_number<vm.ENTRIES.length/2){
+					am_number=Math.round(vm.ENTRIES.length/2);
+				}
+				if (pm_number<vm.ENTRIES.length/2){
+					pm_number=Math.round(vm.ENTRIES.length/2);
+				}
+
+				for (var i=0; i<vm.ENTRIES.length; i++){
+					if (vm.ENTRIES[i].AM_PM==1){
+						var wnum;
+						do {
+							wnum = Math.floor(Math.random()*am_number);
+						} while (isNaN(w_chk[wnum])==false);
+						w_chk[wnum] = i;
+					} else if(vm.ENTRIES[i].AM_PM==2){
+						var wnum;
+						do {
+							wnum = vm.ENTRIES.length - Math.floor(Math.random()*pm_number)-1;
+						} while (isNaN(w_chk[wnum])==false);
+						w_chk[wnum] = i;
+					}
+				}
+				for (var i=0; i<vm.ENTRIES.length; i++){
+					if (vm.ENTRIES[i].AM_PM==0){
+						var wnum;
+						do {
+							wnum = Math.floor(Math.random()*vm.ENTRIES.length);
+						} while (isNaN(w_chk[wnum])==false);
+						w_chk[wnum] = i;
+					}
 				}
 		} else {
 			//予選脱落者除去

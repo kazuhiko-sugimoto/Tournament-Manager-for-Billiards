@@ -1,0 +1,26 @@
+<div id="playerList">
+  <select id="playerList_format" class="form-control" v-model="t_cd" onchange="index.changeFormat();">
+    <option v-for="format in formats" v-bind:value="format.CD">{{ format.NAME }}({{format.DATE}})</option>
+  </select>
+  <div style="height:400px; overflow: auto;">
+    <table class="table-striped">
+      <thead>
+      	<tr>
+      		<td></td>
+      		<td>Name</td>
+          <td>Hall</td>
+          <td>Class</td>
+      	</tr>
+      </thead>
+      <tbody>
+        <tr v-for="entry in entries">
+          <td><input type="checkbox" v-model="entry.CHK"></td>
+  			  <td>{{entry.NAME}}</td>
+  			  <td>{{entry.HALL}}</td>
+          <td>{{entry.SKILL_NM}}</td>
+      	</tr>
+      </tbody>
+    </table>
+  </div>
+  <button class="btn btn-form btn-default" style="float:right;" onclick="index.getPlayerList();">OK</button>
+</div>

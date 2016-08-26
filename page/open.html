@@ -4,7 +4,7 @@
 
     <div class="toolbar-actions">
       <div class="btn-group">
-        <button class="btn btn-default" onclick="gotoHome();">
+        <button v-show="FORMAT.STATUS==0" class="btn btn-default" onclick="gotoHome();">
           <span class="icon icon-left-open"></span>
           Back
         </button>
@@ -19,7 +19,7 @@
         <button v-show="isShowShuffle" class="btn btn-default" onclick="open_click_shuffle();">
           <span class="icon icon-shuffle"></span>
         </button>
-        <button v-show="isShowReset" class="btn btn-default" onclick="click_tReset();">
+        <button v-show="isShowReset" class="btn btn-default" onclick="open_click_tReset();">
           <span class="icon icon-trash"></span>
         </button>
       </div>
@@ -133,7 +133,7 @@
 									</fieldset>
 								</td>
                 <td style="width:20%;">
-									<fieldset id="table7" class="tableTab" style="width:100%; color:{{ colors[7] }};" onclick="open_click_tableTab(7);">
+									<fieldset id="table7" class="tableTab"style="width:100%; color:{{ colors[7] }};" onclick="open_click_tableTab(7);">
 										<legend>8</legend>
 										<div id="insideTable7">
 											<br><br><br>
@@ -206,3 +206,8 @@
     </tr>
   </table>
 </script>
+<style>
+  .none{
+    background: lightgrey;
+  }
+</style>
