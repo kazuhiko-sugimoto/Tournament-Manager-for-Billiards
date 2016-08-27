@@ -33,14 +33,15 @@
   </header>
 
 	<form id="form_entry" onsubmit="return false;" style="position:absolute; top: 60px; width:100%; bottom:50px; overflow: auto;">
-	   <table id="toTable" class="table-striped" width="750px">
+	   <table id="toTable" class="table-striped" width="780px">
        <thead>
          <tr>
 						<th width="30px"></th>
+            <th width="30px"></th>
 						<th width="150px" onclick="index.th_click(1);">{{ W[24] }}</th>
 						<th width="100px" onclick="index.th_click(2);">{{ W[25] }}</th>
 						<th width="150px" onclick="index.th_click(3);">{{ W[26] }}</th>
-						<th class='ampm' width="120px" v-show="H_TYPE!=4" onclick="index.th_click(4);">{{ W[27] }}</th>
+						<th class='ampm' width="120px" v-show="(Y_TYPE==0 && H_TYPE!=4) || (Y_TYPE!=0 && Y_TYPE!=4)" onclick="index.th_click(4);">{{ W[27] }}</th>
 						<th class='yosenHandy' width="100px" v-show="Y_TYPE!=0" onclick="index.th_click(5);">{{ W[28] }}</th>
 						<th width="100px" onclick="index.th_click(6);">{{ W[29] }}</th>
 					</tr>
@@ -52,6 +53,7 @@
                 <span class="icon icon-minus"></span>
               </button>
 						</td>
+            <td>{{ index + 1}}</td>
 			      <td>
               <input id="name{{ index }}" type="text" class="form-control" v-model="entry.NAME" maxlength="12" placeholder="{{ M[0] }}">
             </td>
@@ -68,7 +70,7 @@
 			      <td>
               <input type="text" id="hall{{ index }}" v-model="entry.HALL" class="form-control" maxlength="12" placeholder="{{ M[0] }}">
             </td>
-			      <td v-show="H_TYPE!=4">
+			      <td v-show="(Y_TYPE==0 && H_TYPE!=4) || (Y_TYPE!=0 && Y_TYPE!=4)">
 			        <select :disabled="STATUS!=0" v-model="entry.AM_PM" class="form-control">
 								<option value="0">{{ W[30] }}</option>
 								<option value="1">{{ W[31] }}</option>

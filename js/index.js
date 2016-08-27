@@ -11,30 +11,8 @@ function init_index(){
        $('#lang_en').prop("checked", "checked");
    }
   format.init();
-  /*ENTRY({T_CD:{'==':t_cd}}).remove();
-  var cd = 1;
-  for (var i=0; i<8; i++){
-    var name = "鈴木　一郎"+i;
-    var hall = "At Pool";
-    var skill = 2;
-    var y_handy = 4;
-    var h_handy = 4;
-    var ampm = 0;
-    ENTRY.insert(
-        {
-          T_CD: parseInt(t_cd),
-      		CD: parseInt(cd),
-          NAME: name,
-          SKILL: parseInt(skill),
-          HALL: hall,
-          Y_HANDY: parseInt(y_handy),
-          H_HANDY:  parseInt(h_handy),
-          AM_PM: parseInt(ampm),
-          RANK: null
-    	}
-    );
-    cd++;
-  }*/
+
+  //index.createPlayer_debug();
 
   if (format.vm.STATUS==4){
     t_cd++;
@@ -102,6 +80,32 @@ function init_index(){
   }*/
 
 }
+index.createPlayer_debug = function(){
+  ENTRY({T_CD:{'==':t_cd}}).remove();
+  var cd = 1;
+  for (var i=0; i<8; i++){
+    var name = "鈴木　一郎"+i;
+    var hall = "At Pool";
+    var skill = 2;
+    var y_handy = 4;
+    var h_handy = 4;
+    var ampm = 0;
+    ENTRY.insert(
+        {
+          T_CD: parseInt(t_cd),
+      		CD: parseInt(cd),
+          NAME: name,
+          SKILL: parseInt(skill),
+          HALL: hall,
+          Y_HANDY: parseInt(y_handy),
+          H_HANDY:  parseInt(h_handy),
+          AM_PM: parseInt(ampm),
+          RANK: null
+    	}
+    );
+    cd++;
+  }
+}
 index.clickLang = function(lang){
   nLang = lang;
   setLocalStorage();
@@ -119,11 +123,15 @@ index.clickFormat = function(){
 };
 index.clickFormat_callback = function(){
   index.vm.NAME = format.vm.NAME;
+  index.vm.GAME = format.vm.GAME;
+  index.vm.Y_TYPE = format.vm.Y_TYPE;
+  index.vm.H_TYPE = format.vm.H_TYPE;
   for (var i=0; i<index.vm.entries.length; i++){
     var skill = index.vm.entries[i].SKILL;
     index.vm.entries[i].Y_HANDY = format.vm["Y_HANDY" + skill];
     index.vm.entries[i].H_HANDY = format.vm["H_HANDY" + skill];
   }
+  $('#errMsg').text("");
 }
 index.addRow = function(){
   if (index.vm.entries.length>=64){
@@ -150,14 +158,14 @@ index.removeRow = function(row){
 }
 index.click_Save = function(){
   $('#errMsg').text("");
-
-  for (var i=0; i<index.vm.entries.length; i++){
-    var name = index.vm.entries[i].NAME.trim();
-    if (!name){
-      index.removeRow(i);
+  var wk_entries = _.clone(index.vm.entries);
+  index.vm.entries= [];
+  for (var i=0; i<wk_entries.length; i++){
+    var name = wk_entries[i].NAME.trim();
+    if (name!=""){
+      index.vm.entries.push(wk_entries[i]);
     }
   }
-
 
   for (var i=0; i<index.vm.entries.length; i++){
     var name = index.vm.entries[i].NAME.trim();
@@ -205,7 +213,6 @@ index.click_Save = function(){
     var y_handy = index.vm.entries[i].Y_HANDY;
     var h_handy = index.vm.entries[i].H_HANDY;
     var ampm = index.vm.entries[i].AM_PM;
-    console.debug(index.vm.entries[i]);
     ENTRY.insert(
         {
           T_CD: parseInt(t_cd),
@@ -232,6 +239,10 @@ index.click_Open = function(){
       alert(W[37]);
       index.clickFormat();
       return false;
+    }
+    if (format.vm.Y_TYPE!=0 && (index.vm.entries.length<format.vm.H_NUMBER*2)){
+      	$('#errMsg').text(M[5]);
+        return false;
     }
     mnHistory = 0;
     goto("open");
