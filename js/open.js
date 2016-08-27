@@ -1097,7 +1097,7 @@ function open_setLeagueTab(grp,no){
 	var hall1 = vm.ENTRIES[r.PLAYER1].HALL;
 	var hall2 = vm.ENTRIES[r.PLAYER2].HALL;
 
-	vm.tableInfo[open.selectTab] =new tab_def(null,null,grp,no,r.PLAYER1, r.PLAYER2, name1, name2, handy1, handy2, memo1, memo2);
+	vm.tableInfo[open.selectTab] =new tab_def(null,null,grp,no,r.PLAYER1, r.PLAYER2, name1, name2, handy1, handy2, hall1, hall2);
 	//open_showTabInfo(open.selectTab);
 	var compiled = _.template($('#template_tab').html());
   $('#insideTable'+open.selectTab).html(compiled({tab: vm.tableInfo[open.selectTab]}));
@@ -3524,8 +3524,8 @@ function showLeagueTable(){
 		open.league[i] = new open_league_def(null, null, null, null, null, null);
 		open.league[i].player1 = r.PLAYER1;
 		open.league[i].player2 = r.PLAYER2;
-		open.league[i].score1 = r.SCORE1;
-		open.league[i].score2 = r.SCORE2;
+		open.league[i].score1 = parseInt(r.SCORE1);
+		open.league[i].score2 = parseInt(r.SCORE2);
 		open.league[i].no = r.NO;
 		open.league[i].grp = r.GRP;
 
@@ -3703,8 +3703,8 @@ function procShowLeagueTable(){
 					//確定試合
 					var wHandy1;
 					var wHandy2;
-					var wstr1="×";
-					var wstr2="×";
+					var wstr1="X";
+					var wstr2="X";
 					wHandy1 = open_getHandy(open.league[i].player1);
 					wHandy2 = open_getHandy(open.league[i].player2);
 					var winner = open_getWinner(open.league[i].score1,open.league[i].score2,wHandy1,wHandy2);
@@ -3737,7 +3737,6 @@ function procShowLeagueTable(){
 			cssHide('#btnResult'+i);
 		}
 	}
-	alert("ok");
 }
 //予選結果セット
 function setLeagueYosenResult(){
@@ -3792,6 +3791,7 @@ function setLeagueYosenResult(){
 				if (wchk[k] == false){
 					var wPlayer = grpPlayer[i][k];
 					var wValue = (open.result[wPlayer].win*1000000 + ( open.result[wPlayer].get/ open.result[wPlayer].get_all*1000)*1000 + ( 1000- open.result[wPlayer].lost/ open.result[wPlayer].lost_all*1000));
+					console.debug(wValue, open.result[wPlayer].lost, open.result[wPlayer].get);
 					if (wMax<wValue){
 						wMaxPlayer = k;
 						wMax = wValue;
@@ -3803,6 +3803,7 @@ function setLeagueYosenResult(){
 				wRank = j+1;
 				saveMax = wMax;
 			}
+			console.debug(i,j,wMaxPlayer,wRank);
 			vm.grpRank[i][j] =  new rank_def(grpPlayer[i][wMaxPlayer], wRank);
 			if (wRank<=leagueWinner){
 				open.result[grpPlayer[i][wMaxPlayer]].honsen = 1;

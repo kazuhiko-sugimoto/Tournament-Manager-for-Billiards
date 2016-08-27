@@ -1,6 +1,6 @@
 <div id="open" style="height:100%;">
   <header class="toolbar toolbar-header">
-    <h1 class="title">{{ FORMAT.NAME }}</h1>
+    <h1 class="title">{{ FORMAT.NAME }}{{ tType }}</h1>
 
     <div class="toolbar-actions">
       <div class="btn-group">
@@ -65,30 +65,32 @@
 				<button id="btnShowTotalResult" class="small nav_button_red" style="position:absolute; top:30px; left:90%; display:none;" onclick="click_showTotalResult();">最終結果</button>
 			</div>-->
 			<div style="position:absolute; top:60px; left:0%; width:100%; bottom:100px; text-align:center; overflow:auto;">
-				<canvas id="canvas" width="2000" height="2600" style="width:100%;"></canvas>
+				<canvas id="canvas" v-show="tType!=4 && tType!=0" width="2000" height="2600" style="width:100%;"></canvas>
         <div id="open_league" v-show="tType==4 && tType!=0" style="display:block; width:100%; height:2000px; text-align:center;">
-            <br><br><br>
-            <ul class="list">
-                <li class="item" style="padding:100px 0px 0px 0px;">
-                    <div class="row">
-                        <div class="col-30 th" >
-                            Group{{grp+1}}
-                        </div>
-                        <div v-for="row in table.grps[grp].rows" class="col" style="color: {{row.color}};">
-                            <div style="-webkit-transform: rotate(-90deg);">{{row.name}}</div>
-                        </div>
-                    </div>
-                </li>
-                <li class="item" v-for="row in table.grps[grp].rows" style="padding:0px;">
-                    <div class="row">
-                        <div class="col-30" style="color: {{row.color}};">{{row.name}}</div>
-                        <div v-for="col in row.cols" class="col" ng-style="col.color ? {background: col.color} : ''">
+          <div v-for="(index, group) in table.grps">
+            <table class="table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            Group{{index+1}}
+                        </th>
+                        <th v-for="row in table.grps[index].rows" class="col" style="color: {{row.color}};">
+                            {{row.name}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="item" style="padding:0px;">
+                    <tr v-for="row in table.grps[index].rows">
+                        <td style="color: {{row.color}};">{{row.name}}</td>
+                        <td v-for="col in row.cols" ng-style="col.color ? {background: col.color} : ''">
                             {{col.text}}
-                        </div>
-                    </div>
-                </li>
-            </ul>
-            <button ng-if="isFin && nIsHonsen==0" id='btnResult' class='button button-full {{table.grps[grp].btn_theme}}' on-tap='showSelectPlayerPop({{grp}});' >{{msg(27)}}</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button v-show="isFin && nIsHonsen==0" id='btnResult' class='button button-full {{table.grps[index].btn_theme}}' on-tap='showSelectPlayerPop({{index}});' >{{msg(27)}}</button>
+            <br>
+          </div>
         </div>
 			</div>
 
@@ -232,5 +234,11 @@
 <style>
   .none{
     background: lightgrey;
+  }
+  #open_league th{
+    text-align:center;
+  }
+  #open_league td{
+    text-align:center;
   }
 </style>
