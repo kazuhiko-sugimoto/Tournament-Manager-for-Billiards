@@ -1,0 +1,30 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <h1 class="title">Group{{grp+1}}　{{msg(68)}}</h1>
+        <button class="button icon ion-close" on-tap="modal_selectPlayer.hide();"></button>
+    </ion-header-bar>
+    <ion-content>
+        <div class="list card">
+            <div class="item item-divider">
+                <div class="row" style="text-align:center;">
+                    <div class="col-30">Win-Loss</div>
+                    <div class="col-35">Get</div>
+                    <div class="col-35">Lose</div>
+                </div>
+            </div>
+            <div ng-repeat="item in selectPlayer.list" class="item item-text-wrap" ng-class="result[item.player].honsen==1 ? 'confirm' : ''" on-tap='open_click_confirm(grp,item.player);'>
+                <div class="row">
+                    <div class="col-20" style="font-weight:bold; font-style:italic;">{{item.rank}}</div>
+                    <div class="col-40">{{item.name}}</div>
+                    <div class="col-40">{{item.memo}}</div>
+                </div>
+                <div class="row" style="text-align:center;">
+                    <div class="col-30">{{item.win}}-{{item.lose}}</div>
+                    <div class="col-35">{{item.get}}</div>
+                    <div class="col-35">{{item.lost}}</div>
+                </div>
+            </div>
+        </div>
+
+    </ion-content>
+</ion-modal-view>
