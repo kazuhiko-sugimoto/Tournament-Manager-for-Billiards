@@ -77,18 +77,28 @@
                         <th v-for="row in table.grps[index].rows" class="col" style="color: {{row.color}};">
                             {{row.name}}
                         </th>
+                        <th>{{ W[51]}}</th>
+                        <th>{{ W[52]}}</th>
+                        <th>{{ W[53]}}</th>
+                        <th>{{ W[54]}}</th>
+                        <th>{{ W[55]}}</th>
                     </tr>
                 </thead>
                 <tbody class="item" style="padding:0px;">
                     <tr v-for="row in table.grps[index].rows">
                         <td style="color: {{row.color}};">{{row.name}}</td>
-                        <td v-for="col in row.cols" ng-style="col.color ? {background: col.color} : ''">
+                        <td v-for="col in row.cols" style="{{col.color ? 'color: ' + col.color : ''}}">
                             {{col.text}}
                         </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>
-            <button v-show="isFin && nIsHonsen==0" id='btnResult' class='button button-full {{table.grps[index].btn_theme}}' on-tap='showSelectPlayerPop({{index}});' >{{msg(27)}}</button>
+            <button v-show="isFin && nIsHonsen==0" id='btnResult' class='button button-full {{table.grps[index].btn_theme}}' onclick='showSelectPlayerPop({{index}});' >{{msg(27)}}</button>
             <br>
           </div>
         </div>

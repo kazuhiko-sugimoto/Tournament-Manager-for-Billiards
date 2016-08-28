@@ -52,6 +52,12 @@ function japanese(){
 	W[47] = "不戦敗";
 	W[48] = "確定試合取消";
 	W[49] = "このテーブルを使用しない";
+	W[50] = "試合中";
+	W[51] = "勝";
+	W[52] = "負";
+	W[53] = "得点率";
+	W[54] = "失点率";
+	W[55] = "順位";
 
 	M[0] = "12バイト以内で入力して下さい。";
 	M[1] = "値が不正です。";
@@ -126,6 +132,12 @@ function english(){
 	W[47] = "lose without fight";
 	W[48] = "Undo definite game";
 	W[49] = "Do not use this table";
+	W[50] = "During";
+	W[51] = "W";
+	W[52] = "L";
+	W[53] = "Got";
+	W[54] = "Lost";
+	W[55] = "Rank";
 
 	M[0] = "Enter up to 12 bytes.";
 	M[1] = "Invalid value.";

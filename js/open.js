@@ -7,13 +7,6 @@ var vm;
 var x_center;
 
 /*
-
-  $ionicModal.fromTemplateUrl('templates/pop_totalResult.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-  }).then(function(modal) {
-      open.modal_totalResult = modal;
-  });
   $ionicModal.fromTemplateUrl('templates/pop_selectPlayer.html', {
       scope: $scope,
       animation: 'slide-in-up'
@@ -42,8 +35,8 @@ var x_center;
 ///	///	///	///	///	///	///	///	///	///	/////				def						///
 function open_tournament(from1, from2, player1, player2) {
 	this.from1 = from1;
-    this.from2 = from2;
-    this.player1 = player1;
+  this.from2 = from2;
+  this.player1 = player1;
 	this.player2 = player2;
 }
 function open_loc(x, y) {
@@ -139,6 +132,7 @@ function init_open(){
 			tType: 0,
 			isSingle: true,
 			nIsHonsen: 0,
+			isFin: false,
 			colors: ["Royalblue","Crimson","Mediumorchid","Springgreen","Orange","Burlywood","hotpink","Yellowgreen","Mediumseagreen","Brown"]
     }
   });
@@ -219,7 +213,7 @@ function open_refresh(){
 	open.selectTab = null;
 	vm.tableInfo = []; //new Array(10);
 	vm.grpRank = [];	//グループ内順位
-	//open.isFin = false;	//リーグ予選主終了
+	//vm.isFin = false;	//リーグ予選主終了
 	vm.grp = 0; 	//リーグ戦選択グループ
 	open.result = [];
 	if ((vm.FORMAT.STATUS==0 && vm.FORMAT.Y_TYPE==0) || (vm.FORMAT.STATUS>=2)){
@@ -1842,6 +1836,23 @@ function showSelectPlayerPop(grp){
 		showHonsenResultLeague();
 		return;
 	}
+	popup_show({
+		name: "yosenResult_league",
+    //title: "Group" + (grp+1}　{{msg(68)}},
+    width: "600px",
+		callback: yosenResult_leaguePop_callback
+	});
+}
+function yosenResult_leaguePop_callback(){
+
+	new Vue({
+		el: '#openpop_div',
+		data: {
+			date: getDateStr(new Date()),
+			name: name,
+			yh: wYH
+		}
+	})
 	//intel.xdk.player.playSound("sounds/select.mp3");
 	open.selectPlayer = {
 		list:[]
@@ -3507,7 +3518,7 @@ function open_setLeagueTable(){
 }
 function showLeagueTable(){
 	//alert("ss" + d + "ss");
-	open.isFin = false;
+	vm.isFin = false;
 	 /*
 	 var s="";
 	 alert(data.length);
@@ -3524,11 +3535,10 @@ function showLeagueTable(){
 		open.league[i] = new open_league_def(null, null, null, null, null, null);
 		open.league[i].player1 = r.PLAYER1;
 		open.league[i].player2 = r.PLAYER2;
-		open.league[i].score1 = parseInt(r.SCORE1);
-		open.league[i].score2 = parseInt(r.SCORE2);
+		open.league[i].score1 = r.SCORE1==null ? null : parseInt(r.SCORE1);
+		open.league[i].score2 = r.SCORE2==null ? null : parseInt(r.SCORE2);
 		open.league[i].no = r.NO;
 		open.league[i].grp = r.GRP;
-
 		if (open.league[i].score1==null || (open.league[i].score1==0 && open.league[i].score2==0)){
 			flg = true;
 		}
@@ -3553,7 +3563,7 @@ function showLeagueTable(){
 				break;
 	 	}
 	 	vm.isShowFootArea = false;
-	 	open.isFin = true;
+	 	vm.isFin = true;
 	 } else {
 	 	switch (vm.FORMAT.STATUS){
 	 		case 0:
@@ -3574,7 +3584,7 @@ function showLeagueTable(){
 				break;
 	 	}
 	 	vm.isShowFin = false;
-	 	open.isFin = false;
+	 	vm.isFin = false;
 	 }
 	 procShowLeagueTable();
 }
@@ -3695,9 +3705,9 @@ function procShowLeagueTable(){
 					var wcolor = open_getPlayColor(play);
 					//$('#open_league_td'+wgrp+"-"+wplayer1+"-"+wplayer2).css("color",wcolor).text(msg(65));
 					//$('#open_league_td'+wgrp+"-"+wplayer2+"-"+wplayer1).css("color",wcolor).text(msg(65));
-					vm.table.grps[wgrp].rows[wplayer1].cols[wplayer2] = {text:"", color:wcolor};
+					vm.table.grps[wgrp].rows[wplayer1].cols[wplayer2] = {text:W[50], color:wcolor};
 
-					vm.table.grps[wgrp].rows[wplayer2].cols[wplayer1] = {text:"", color:wcolor};
+					vm.table.grps[wgrp].rows[wplayer2].cols[wplayer1] = {text:W[50], color:wcolor};
 
 				} else {
 					//確定試合
@@ -3723,7 +3733,8 @@ function procShowLeagueTable(){
 			}
 		}
 	}
-	if (open.isFin==true){
+
+	if (vm.isFin==true){
 		//if (vm.nIsHonsen==0 && vm.FORMAT.STATUS==1){
 		if (vm.nIsHonsen==0){
 			setLeagueYosenResult();
@@ -3791,7 +3802,6 @@ function setLeagueYosenResult(){
 				if (wchk[k] == false){
 					var wPlayer = grpPlayer[i][k];
 					var wValue = (open.result[wPlayer].win*1000000 + ( open.result[wPlayer].get/ open.result[wPlayer].get_all*1000)*1000 + ( 1000- open.result[wPlayer].lost/ open.result[wPlayer].lost_all*1000));
-					console.debug(wValue, open.result[wPlayer].lost, open.result[wPlayer].get);
 					if (wMax<wValue){
 						wMaxPlayer = k;
 						wMax = wValue;
@@ -3803,7 +3813,6 @@ function setLeagueYosenResult(){
 				wRank = j+1;
 				saveMax = wMax;
 			}
-			console.debug(i,j,wMaxPlayer,wRank);
 			vm.grpRank[i][j] =  new rank_def(grpPlayer[i][wMaxPlayer], wRank);
 			if (wRank<=leagueWinner){
 				open.result[grpPlayer[i][wMaxPlayer]].honsen = 1;

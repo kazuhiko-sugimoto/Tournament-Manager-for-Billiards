@@ -83,7 +83,7 @@ function init_index(){
 index.createPlayer_debug = function(){
   ENTRY({T_CD:{'==':t_cd}}).remove();
   var cd = 1;
-  for (var i=0; i<8; i++){
+  for (var i=0; i<12; i++){
     var name = "鈴木　一郎"+i;
     var hall = "At Pool";
     var skill = 2;
