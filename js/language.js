@@ -58,6 +58,8 @@ function japanese(){
 	W[53] = "得点率";
 	W[54] = "失点率";
 	W[55] = "順位";
+	W[56] = "不戦勝";
+	W[57] = "不戦敗";
 
 	M[0] = "12バイト以内で入力して下さい。";
 	M[1] = "値が不正です。";
@@ -138,6 +140,8 @@ function english(){
 	W[53] = "Got";
 	W[54] = "Lost";
 	W[55] = "Rank";
+	W[56] = "unearned win";
+	W[57] = "default";
 
 	M[0] = "Enter up to 12 bytes.";
 	M[1] = "Invalid value.";

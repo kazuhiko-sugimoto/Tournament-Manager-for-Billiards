@@ -3645,38 +3645,21 @@ function procShowLeagueTable(){
 			vm.table.grps[i].rows.push({
 				name: vm.ENTRIES[grpPlayer[i][j]].NAME,
 				color: "black",
-				cols: []
+				cols: [],
+				w: 0,
+				l: 0,
+				get: 0,
+				lost: 0,
+				handy1: 0,
+				handy2: 0,
+				rank: null,
+				honsen: 0
 			});
 			for (var k=0; k<grpPlayer[i].length; k++){
-				vm.table.grps[i].rows[j].cols.push({text:'', color:''});
+				vm.table.grps[i].rows[j].cols.push({text:'', color:'',win:0, lose:0, get:0, lost:0, handy1:0, handy2:0});
 			}
 		}
 	}
-
-
-	/*for (var i=0; i<grpPlayer.length; i++){
-		s+="<button id='btnResult" + i + "' class='button' onclick='showSelectPlayerPop(" + i + ");' >" + msg(27) + "</button>";
-		s+="<table border='1' width='100%'><tr>";
-		s+="<th style='width:15%; background:gray; color:white;'>Group" + (i+1) + "</th>";
-		for (var j=0; j<grpPlayer[i].length;j++){
-			s+="<th style='text-overflow: ellipsis; width:" + (85/grpPlayer[i].length)+ "%;' class='leaguePlayer" + i + "-" + j + "'>" + vm.ENTRIES[grpPlayer[i][j]].NAME + "</th>";
-		}
-		s+="</tr>";
-		for (var j=0; j<grpPlayer[i].length;j++){
-			s+="<tr><th class='leaguePlayer" + i + "-" + j + "'>" + vm.ENTRIES[grpPlayer[i][j]].NAME +"</th>";
-			for (var k=0; k<grpPlayer[i].length;k++){
-				if (j==k){
-					s+="<td>----</td>";
-				} else {
-					s+="<td id='open_league_td" + i + "-" + j + "-" + k +"'></td>";
-				}
-			}
-			s+="</tr>";
-		}
-		s+="</table><br>";
-	}*/
-
-	//$('#open_league').html(s);
 
 	//セル値書き込み
 
@@ -3705,9 +3688,9 @@ function procShowLeagueTable(){
 					var wcolor = open_getPlayColor(play);
 					//$('#open_league_td'+wgrp+"-"+wplayer1+"-"+wplayer2).css("color",wcolor).text(msg(65));
 					//$('#open_league_td'+wgrp+"-"+wplayer2+"-"+wplayer1).css("color",wcolor).text(msg(65));
-					vm.table.grps[wgrp].rows[wplayer1].cols[wplayer2] = {text:W[50], color:wcolor};
+					vm.table.grps[wgrp].rows[wplayer1].cols[wplayer2] = {text:W[50], color:wcolor,win:0, lose:0, get:0, lost:0, handy1:0, handy2:0};
 
-					vm.table.grps[wgrp].rows[wplayer2].cols[wplayer1] = {text:W[50], color:wcolor};
+					vm.table.grps[wgrp].rows[wplayer2].cols[wplayer1] = {text:W[50], color:wcolor,win:0, lose:0, get:0, lost:0, handy1:0, handy2:0};
 
 				} else {
 					//確定試合
@@ -3715,9 +3698,11 @@ function procShowLeagueTable(){
 					var wHandy2;
 					var wstr1="X";
 					var wstr2="X";
+					var score1 = open.league[i].score1;
+					var score2 = open.league[i].score2;
 					wHandy1 = open_getHandy(open.league[i].player1);
 					wHandy2 = open_getHandy(open.league[i].player2);
-					var winner = open_getWinner(open.league[i].score1,open.league[i].score2,wHandy1,wHandy2);
+					var winner = open_getWinner(score1,score2,wHandy1,wHandy2);
 
 					if (winner==1){
 						wstr1="W"; //"○";
@@ -3725,13 +3710,56 @@ function procShowLeagueTable(){
 						wstr2="W"; //"○";
 					}
 					var wcolor = "black";
-					//$('#open_league_td'+wgrp+"-"+wplayer1+"-"+wplayer2).css("color",wcolor).text(wstr1+"(" + open.league[i].score1 + "-" + open.league[i].score2 + ")");
-					//$('#open_league_td'+wgrp+"-"+wplayer2+"-"+wplayer1).css("color",wcolor).text(wstr2+"(" + open.league[i].score2 + "-" + open.league[i].score1 + ")");
-					vm.table.grps[wgrp].rows[wplayer1].cols[wplayer2] = {text:wstr1, color:""};
-					vm.table.grps[wgrp].rows[wplayer2].cols[wplayer1] = {text:wstr2, color:""};
+					if (score1==-1){
+						wstr1 += "(" + W[57] + ")";
+						wstr2 += "(" + W[56] + ")";
+						score1 = 0;
+						score2 = 0;
+						wHandy1 = 0;
+						wHandy2 = 0;
+					} else if (score2==-1){
+						wstr2 += "(" + W[57] + ")";
+						wstr1 += "(" + W[56] + ")";
+						score1 = 0;
+						score2 = 0;
+						wHandy1 = 0;
+						wHandy2 = 0;
+					} else {
+						wstr1 += "(" + score1 + "-" + score2 + ")";
+						wstr2 += "(" + score2 + "-" + score1 + ")";
+					}
+					//$('#open_league_td'+wgrp+"-"+wplayer1+"-"+wplayer2).css("color",wcolor).text(wstr1+"(" + score1 + "-" + score2 + ")");
+					//$('#open_league_td'+wgrp+"-"+wplayer2+"-"+wplayer1).css("color",wcolor).text(wstr2+"(" + score2 + "-" + score1 + ")");
+					vm.table.grps[wgrp].rows[wplayer1].cols[wplayer2] = {text:wstr1, color:"", win: winner==1 ? 1 : 0, lose: winner==2 ? 1 : 0, get: score1 , lost: score2, handy1: wHandy1, handy2: wHandy2};
+					vm.table.grps[wgrp].rows[wplayer2].cols[wplayer1] = {text:wstr2, color:"", win: winner==2 ? 1 : 0, lose: winner==1 ? 1 : 0, get: score2 , lost: score1, handy1: wHandy2, handy2: wHandy1};
 				}
 			}
 		}
+	}
+	for (var i=0; i<vm.table.grps.length; i++){
+		for (var j=0; j<vm.table.grps[i].rows.length; j++){
+			var w=0;
+			var l=0;
+			var get=0;
+			var lost=0;
+			var handy1=0;
+			var handy2=0;
+			for (var k=0; k<vm.table.grps[i].rows[j].cols.length; k++){
+				w+=vm.table.grps[i].rows[j].cols[k].win;
+				l+=vm.table.grps[i].rows[j].cols[k].lose;
+				get+=vm.table.grps[i].rows[j].cols[k].get;
+				lost+=vm.table.grps[i].rows[j].cols[k].lost;
+				handy1+=vm.table.grps[i].rows[j].cols[k].handy1;
+				handy2+=vm.table.grps[i].rows[j].cols[k].handy2;
+			}
+			vm.table.grps[i].rows[j].w = w;
+			vm.table.grps[i].rows[j].l= l;
+			vm.table.grps[i].rows[j].get= get;
+			vm.table.grps[i].rows[j].lost = lost;
+			vm.table.grps[i].rows[j].handy1= handy1;
+			vm.table.grps[i].rows[j].handy2 = handy2;
+		}
+
 	}
 
 	if (vm.isFin==true){
@@ -3750,7 +3778,7 @@ function procShowLeagueTable(){
 	}
 }
 //予選結果セット
-function setLeagueYosenResult(){
+/*function setLeagueYosenResult(){
 	var wRank;
 	var wWinner;
 	var wLooser;
@@ -3822,6 +3850,47 @@ function setLeagueYosenResult(){
 
 	showBtnResultLeague();
 	showLeagueHonsenPlayer();
+}*/
+function setLeagueYosenResult(){
+
+	var wRank;
+	var leagueWinner = parseInt(vm.FORMAT['H_NUMBER'])/open.groups;
+	for (var i=0; i<vm.table.grps.length; i++){
+		var wchk = [];
+		vm.grpRank[i] = [];
+		for (var j=0; j<grpPlayer[i].length; j++){
+			wchk[j] = false;
+		}
+		var saveMax = 0;
+		for (var j=0; j<vm.table.grps[i].rows.length; j++){
+			var wMax = -1;
+			var wMaxPlayer = -1;
+			for (var k=0; k<vm.table.grps[i].rows[j].cols.length; k++){
+				if (wchk[k] == false){
+					var wValue = (vm.table.grps[i].rows[k].w *1000000 + ( vm.table.grps[i].rows[k].get/ vm.table.grps[i].rows[k].handy1*1000)*1000 + ( 1000- vm.table.grps[i].rows[k].lost/ vm.table.grps[i].rows[k].handy2*1000));
+					if (wMax<wValue){
+						wMaxPlayer = k;
+						wMax = wValue;
+					}
+				}
+			}
+			wchk[wMaxPlayer] = true;
+			if (saveMax!=wMax){
+				wRank = j+1;
+				saveMax = wMax;
+			}
+			vm.table.grps[i].rows[wMaxPlayer].rank = wRank;
+			console.debug(vm.table.grps[i].rows[wMaxPlayer].rank);
+			if (wRank<=leagueWinner){
+				vm.table.grps[i].rows[wMaxPlayer].honsen = 1;
+				//vm.table.grps[i].rows[wMaxPlayer].color = "red";
+			}
+		}
+
+	}
+
+	//showBtnResultLeague();
+	//showLeagueHonsenPlayer();
 }
 //本戦進出者セット
 function showBtnResultLeague(){

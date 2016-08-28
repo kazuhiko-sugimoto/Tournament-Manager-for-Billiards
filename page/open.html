@@ -74,27 +74,25 @@
                         <th>
                             Group{{index+1}}
                         </th>
-                        <th v-for="row in table.grps[index].rows" class="col" style="color: {{row.color}};">
+                        <th v-for="row in table.grps[index].rows" class="col">
                             {{row.name}}
                         </th>
                         <th>{{ W[51]}}</th>
                         <th>{{ W[52]}}</th>
                         <th>{{ W[53]}}</th>
                         <th>{{ W[54]}}</th>
-                        <th>{{ W[55]}}</th>
                     </tr>
                 </thead>
                 <tbody class="item" style="padding:0px;">
-                    <tr v-for="row in table.grps[index].rows">
-                        <td style="color: {{row.color}};">{{row.name}}</td>
+                    <tr v-for="row in table.grps[index].rows" style="{{row.honsen==1 ? 'color:red;' : ''}}">
+                        <td>{{ row.rank==null ? "" : "(" + row.rank + ")"}}{{row.name}}</td>
                         <td v-for="col in row.cols" style="{{col.color ? 'color: ' + col.color : ''}}">
                             {{col.text}}
                         </td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>{{row.w}}</td>
+                        <td>{{row.l}}</td>
+                        <td>{{row.get}}/{{row.handy1}}</td>
+                        <td>{{row.lost}}/{{row.handy2}}</td>
                     </tr>
                 </tbody>
             </table>
