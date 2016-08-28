@@ -1832,13 +1832,13 @@ function open_proc_undoLeagueList(grp,no){
 }
 //リーグ戦結果関連
 function showSelectPlayerPop(grp){
-	if (vm.nIsHonsen==1){
+	/*if (vm.nIsHonsen==1){
 		showHonsenResultLeague();
 		return;
-	}
+	}*/
 	popup_show({
 		name: "yosenResult_league",
-    //title: "Group" + (grp+1}　{{msg(68)}},
+    title: "Group" + (grp+1) + M[15],
     width: "600px",
 		callback: yosenResult_leaguePop_callback
 	});
@@ -3880,7 +3880,6 @@ function setLeagueYosenResult(){
 				saveMax = wMax;
 			}
 			vm.table.grps[i].rows[wMaxPlayer].rank = wRank;
-			console.debug(vm.table.grps[i].rows[wMaxPlayer].rank);
 			if (wRank<=leagueWinner){
 				vm.table.grps[i].rows[wMaxPlayer].honsen = 1;
 				//vm.table.grps[i].rows[wMaxPlayer].color = "red";
@@ -3893,7 +3892,7 @@ function setLeagueYosenResult(){
 	//showLeagueHonsenPlayer();
 }
 //本戦進出者セット
-function showBtnResultLeague(){
+/*function showBtnResultLeague(){
 	var leagueWinner = parseInt(vm.FORMAT['H_NUMBER'])/open.groups;
 	var returnValue = 0;
 	for (var j=0; j<open.groups; j++){
@@ -3915,6 +3914,35 @@ function showBtnResultLeague(){
 		}
 	}
 	return returnValue;
+}*/
+function showBtnResultLeague(){
+	var leagueWinner = parseInt(vm.FORMAT['H_NUMBER'])/open.groups;
+	var returnValue = 0;
+	for (var j=0; j<vm.table.grps.length; j++){
+		//cssShow('#btnResult'+j);
+		var wconfirmNum = 0;
+		for (var i=0; i<vm.table.grps[j].rows.length; i++){
+			//var wPlayer = vm.grpRank[j][i].player;
+			if (vm.table.grps[j].rows[i].honsen==1){
+				wconfirmNum++;
+			}
+		}
+		if (leagueWinner!=wconfirmNum){
+			//$('#btnResult'+j).addClass("red");
+			//vm.table.grps[j].btn_theme = "button-assertive";
+			returnValue = j+1;
+		} else {
+			//$('#btnResult'+j).removeClass("red");
+			//vm.table.grps[j].btn_theme = "button-stable";
+		}
+	}
+	return returnValue;
+}
+function click_leagueTr(grp,row){
+	if (vm.isFin==true && vm.nIsHonsen==0){
+		var val = vm.table.grps[grp].rows[row].honsen;
+		vm.table.grps[grp].rows[row].honsen = 1-val;
+	}
 }
 //本戦進出者色セット
 function showLeagueHonsenPlayer(){

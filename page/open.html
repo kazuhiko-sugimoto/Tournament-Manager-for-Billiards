@@ -84,7 +84,7 @@
                     </tr>
                 </thead>
                 <tbody class="item" style="padding:0px;">
-                    <tr v-for="row in table.grps[index].rows" style="{{row.honsen==1 ? 'color:red;' : ''}}">
+                    <tr v-for="(rowIndex, row) in table.grps[index].rows" style="{{row.honsen==1 ? 'color:red;' : ''}}" onclick="click_leagueTr({{index}},{{rowIndex}});">
                         <td>{{ row.rank==null ? "" : "(" + row.rank + ")"}}{{row.name}}</td>
                         <td v-for="col in row.cols" style="{{col.color ? 'color: ' + col.color : ''}}">
                             {{col.text}}
@@ -96,7 +96,6 @@
                     </tr>
                 </tbody>
             </table>
-            <button v-show="isFin && nIsHonsen==0" id='btnResult' class='button button-full {{table.grps[index].btn_theme}}' onclick='showSelectPlayerPop({{index}});' >{{msg(27)}}</button>
             <br>
           </div>
         </div>
