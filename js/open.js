@@ -908,7 +908,7 @@ function open_drawLeagueCanvas(){
 	var name_width = 200;
 	var body_width = 1500;
 	var row_height = 34;
-	var pad_x = 5;
+	var pad_x = 25;
 	var pad_y = 25;
 	var win_width = 50;
 	var get_width = 100;
@@ -925,12 +925,12 @@ function open_drawLeagueCanvas(){
 		for (var j=0; j<cols; j++){
 			var x= name_width + j*body_width/cols;
 			rect( x ,base_y,body_width/cols,row_height);
-			filltext(vm.table.grps[i].rows[j].name, x + pad_x, base_y+pad_y);
+			filltext(vm.table.grps[i].rows[j].name, x + 5, base_y+pad_y);
 		}
 		rect(detail_x,base_y,win_width,row_height);
-		filltext(W[51], detail_x + pad_x, base_y+pad_y);
+		filltext(W[51], detail_x + 15, base_y+pad_y);
 		rect(detail_x + win_width,base_y,win_width,row_height);
-		filltext(W[52], detail_x + + win_width + pad_x, base_y+pad_y);
+		filltext(W[52], detail_x + + win_width + 15, base_y+pad_y);
 		rect(detail_x + win_width*2,base_y,get_width,row_height);
 		filltext(W[53], detail_x + + win_width*2 + pad_x, base_y+pad_y);
 		rect(detail_x + win_width*2 + get_width,base_y,get_width,row_height);
@@ -945,9 +945,9 @@ function open_drawLeagueCanvas(){
 				filltext(vm.table.grps[i].rows[j].cols[k].text, x + pad_x, base_y +pad_y);
 			}
 			rect(detail_x,base_y ,win_width,row_height);
-			filltext(vm.table.grps[i].rows[j].w, detail_x + pad_x, base_y +pad_y);
+			filltext(vm.table.grps[i].rows[j].w, detail_x + 15, base_y +pad_y);
 			rect(detail_x + win_width,base_y ,win_width,row_height);
-			filltext(vm.table.grps[i].rows[j].l, detail_x + + win_width + pad_x, base_y + pad_y);
+			filltext(vm.table.grps[i].rows[j].l, detail_x + + win_width + 15, base_y + pad_y);
 			rect(detail_x + win_width*2,base_y,get_width,row_height);
 			filltext(vm.table.grps[i].rows[j].get + "/" + vm.table.grps[i].rows[j].handy1, detail_x + + win_width*2 + pad_x, base_y + pad_y);
 			rect(detail_x + win_width*2 + get_width,base_y ,get_width,row_height);
@@ -3819,7 +3819,8 @@ function procShowLeagueTable(){
 		//if (vm.nIsHonsen==0 && vm.FORMAT.STATUS==1){
 		if (vm.nIsHonsen==0){
 			setLeagueYosenResult();
-		} else if (vm.nIsHonsen==1 && vm.FORMAT.STATUS==3){
+		//} else if (vm.nIsHonsen==1 && vm.FORMAT.STATUS==3){
+		} else if (vm.nIsHonsen==1){
 			setLeagueHonsenResult();
 			//showHonsenResultLeague();
 		}
@@ -4094,6 +4095,7 @@ function setLeagueHonsenResult(){
 			wRank = j+1;
 			saveMax = wMax;
 		}
+		//console.debug(i,wMaxPlayer,wRank);
 		vm.table.grps[i].rows[wMaxPlayer].rank = wRank;
 		var entryNo = grpPlayer[i][wMaxPlayer];
 		open.result[entryNo].win = vm.table.grps[i].rows[wMaxPlayer].w;
