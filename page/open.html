@@ -4,7 +4,7 @@
 
     <div class="toolbar-actions">
       <div class="btn-group">
-        <button v-show="FORMAT.STATUS==0" class="btn btn-default" onclick="gotoHome();">
+        <button v-show="FORMAT.STATUS==0 || FORMAT.STATUS==4" class="btn btn-default" onclick="open_clickBack();">
           <span class="icon icon-left-open"></span>
           Back
         </button>
@@ -13,7 +13,7 @@
         <button v-show="isShowSettings" class="btn btn-default" onclick="clickFormat();">
           <span class="icon icon-cog"></span>
         </button>
-        <button v-show="nHistory" class="btn btn-default" onclick="click_outputPdf();">
+        <button v-show="nHistory" class="btn btn-default" onclick="open_click_outputPdf();">
           <span class="icon icon-download"></span>
         </button>
         <button v-show="isShowShuffle" class="btn btn-default" onclick="open_click_shuffle();">
@@ -51,19 +51,6 @@
       </button>
     </div>
   </header>
-	<!--<h4>{{ NAME }}</h4>
-
-			<div id="after_head" style="display:none;">
-				<div id="t_condition" style="position:absolute; top:35px; left:35%; width:35%;"></div>
-				<button id="btnShuffle" style="position:absolute; top:30px; left:80%; display:none;" onclick="click_shuffle();">shuffle</button>
-				<button id="btnOpen" style="position:absolute; top:30px; left:90%; display:none;" onclick="click_open();">Start</button>
-				<button id="nav0" class="small nav_button_select" style="position:absolute; top:30px; left:60%; display:none;" onclick="click_nav(0);">予選</button>
-				<button id="nav1" class="small nav_button" style="position:absolute; top:30px; left:70%; display:none;" onclick="click_nav(1);">本戦</button>
-				<button id="t_reset" class="small nav_button_yellow" style="position:absolute; top:30px; left:80%;" onclick="click_tReset();">リセット</button>
-				<button id="y_fin" class="small nav_button_red" style="position:absolute; top:30px; left:90%; display:none;" onclick="click_yFin();">本戦開始</button>
-				<button id="h_fin" class="small nav_button_red" style="position:absolute; top:30px; left:90%; display:none;" onclick="click_hFin();">試合確定</button>
-				<button id="btnShowTotalResult" class="small nav_button_red" style="position:absolute; top:30px; left:90%; display:none;" onclick="click_showTotalResult();">最終結果</button>
-			</div>-->
 			<div style="position:absolute; top:60px; left:0%; width:100%; bottom:100px; text-align:center; overflow:auto;">
 				<canvas id="canvas" v-show="tType!=4 && tType!=0" width="2000" height="2600" style="width:100%;"></canvas>
         <div id="open_league" v-show="tType==4 && tType!=0" style="display:block; width:100%; height:2000px; text-align:center;">
@@ -192,7 +179,7 @@
             </table>
 					</div>
 				</div>
-				<button class="btn btn-default" style="position:absolute; bottom:0px; right:0px; width:40px; height:100px;" onclick="open_click_auto();">auto</button>
+				<button class="btn btn-positive" style="position:absolute; bottom:0px; right:0px; width:40px; height:100px;" onclick="open_click_auto();">auto</button>
 			</div>
 </div>
 <script id="template_tab" type="text/html">

@@ -1,0 +1,12 @@
+<div id="history">
+  <ul class="list-group" style="height:400px; overflow: auto;">
+    <li v-for="list in historyLists" class="list-group-item" >
+      <table>
+        <tr onclick="index.historyOk({{list.CD}});">
+          <td>{{list.NAME}}</td>
+          <td>{{list.DATE}}</td>
+        </tr>
+      </table>
+		</li>
+	</ul>
+</div>

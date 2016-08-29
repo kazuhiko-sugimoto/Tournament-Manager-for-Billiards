@@ -333,43 +333,77 @@ index.th_click = function(num){
 		index.nOrder= num;
 	}
 
-		switch (index.nOrder){
-			case 1:
-				index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return obj.NAME.toUpperCase()});
-				break;
-			case -1:
-				index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return obj.NAME.toUpperCase()}).reverse();
-				break;
-			case 2:
-				index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return obj.SKILL});
-				break;
-			case -2:
-				index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return -obj.SKILL});
-				break;
-			case 3:
-				index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return obj.HALL.toUpperCase()});
-				break;
-			case -3:
-				index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return obj.HALL.toUpperCase()}).reverse();
-				break;
-			case 4:
-				index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return obj.AM_PM});
-				break;
-			case -4:
-				index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return -obj.AM_PM});
-				break;
-      case 5:
-				index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return obj.Y_HANDY});
-				break;
-			case -5:
-				index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return -obj.Y_HANDY});
-				break;
-      case 6:
-				index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return obj.H_HANDY});
-				break;
-			case -6:
-				index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return -obj.H_HANDY});
-				break;
+	switch (index.nOrder){
+		case 1:
+			index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return obj.NAME.toUpperCase()});
+			break;
+		case -1:
+			index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return obj.NAME.toUpperCase()}).reverse();
+			break;
+		case 2:
+			index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return obj.SKILL});
+			break;
+		case -2:
+			index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return -obj.SKILL});
+			break;
+		case 3:
+			index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return obj.HALL.toUpperCase()});
+			break;
+		case -3:
+			index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return obj.HALL.toUpperCase()}).reverse();
+			break;
+		case 4:
+			index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return obj.AM_PM});
+			break;
+		case -4:
+			index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return -obj.AM_PM});
+			break;
+    case 5:
+			index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return obj.Y_HANDY});
+			break;
+		case -5:
+			index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return -obj.Y_HANDY});
+			break;
+    case 6:
+			index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return obj.H_HANDY});
+			break;
+		case -6:
+			index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return -obj.H_HANDY});
+			break;
 
+	}
+}
+index.clickHistory = function(){
+  popup_show({
+    name: "history",
+    title: W[36],
+    width: "600px",
+    callback: index.clickHistory_callback
+  });
+}
+index.clickHistory_callback = function(){
+  var historyLists = index.getHistoryLists();
+  index.historyVM = new Vue({
+		el: '#history',
+		data: {
+			historyLists: historyLists
 		}
-  }
+	})
+}
+index.getHistoryLists= function(){
+  var historyLists = [];
+  FORMAT({CD:{'!=':t_cd}}).order("DATE desc").each(function (r) {
+     historyLists.push({
+       CD: r.CD,
+       NAME: r.NAME,
+       DATE: r.DATE
+     })
+  });
+  return historyLists;
+}
+index.historyOk = function(cd){
+  popup_hide("history");
+  mnHistory = 1;
+  t_cd = cd;
+  goto("open");
+}

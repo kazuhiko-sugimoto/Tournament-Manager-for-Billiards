@@ -12,8 +12,11 @@ format.show = function(param){
 
 format.init = function(){
   var cnt = FORMAT().count();
+
   if (cnt>0){
-    t_cd = FORMAT().max("CD");
+    if (mnHistory!=1){
+      t_cd = FORMAT().max("CD");
+    }
     var r = FORMAT({CD:{'==':t_cd}}).first();
     format.vm = new Vue({
       el: '#format',

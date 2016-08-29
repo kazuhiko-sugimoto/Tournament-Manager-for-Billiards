@@ -7,12 +7,6 @@ var vm;
 var x_center;
 
 /*
-  $ionicModal.fromTemplateUrl('templates/pop_selectPlayer.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-  }).then(function(modal) {
-      open.modal_selectPlayer = modal;
-  });
   $ionicModal.fromTemplateUrl('templates/pop_honsenResult_league.html', {
       scope: $scope,
       animation: 'slide-in-up'
@@ -133,7 +127,7 @@ function init_open(){
 			isSingle: true,
 			nIsHonsen: 0,
 			isFin: false,
-			colors: ["Royalblue","Crimson","Mediumorchid","Springgreen","Orange","Burlywood","hotpink","Yellowgreen","Mediumseagreen","Brown"]
+			colors: ["#2196f3","#f44336","#9c27b0","#4caf50","#ff9800","#1a237e","#e91e63","#009688","#cddc39","#795548"]
     }
   });
 
@@ -371,6 +365,10 @@ function open_resetInGame(){
 	}
 }
 ///	///	///	///	///	///	///	///	///	///	/////				on-tap					///
+function open_clickBack(){
+	mnHistory=0;
+	gotoHome();
+}
 function open_click_open(){
 	//tStatus = 0;
 	vm.isShowFootArea = true;
@@ -398,6 +396,15 @@ function open_click_nav(num){
 //リセット
 function open_click_tReset(){
 	//intel.xdk.player.playSound("sounds/select.mp3");
+	if (mnHistory==1){
+		if (confirm(vm.FORMAT.NAME + M[7])){
+			FORMAT({CD:{'==':t_cd}}).remove();
+			ENTRY({T_CD:{'==':t_cd}}).remove();
+			mnHistory = 0;
+			gotoHome();
+		}
+		return;
+	}
 	var s="";
 	if (vm.nIsHonsen==0){
 		s=W[2];
@@ -446,15 +453,8 @@ function open_proc_tReset(){
 		}
 	}
 
-	if (open.nHistory==0){
-		init_open();
-		//open.modal_navOpen.hide();
-		//location.href="#/open";
-	} else {
-		//open.modal_navOpen.hide();
-		gotoHome();
+	gotoHome();
 
-	}
 	//getData( "open/resetTournament", {type: vm.tType, cd: t_cd, honsen: vm.nIsHonsen, h_number: wHonsenNum}, suucessFnc_open_proc_tReset,true );
 }
 function open_click_shuffle(){
@@ -888,6 +888,90 @@ function totalResultPop_callback(){
 }
 function click_grp(index){
 	vm.grp = index;
+}
+//Download
+function open_click_outputPdf(){
+	if (vm.tType==4){
+		open_drawLeagueCanvas();
+		return;
+	}
+	Canvas2Image.saveAsPNG(canvas, 2000, 2600);
+}
+function open_drawLeagueCanvas(){
+	context.clearRect(0,0,canvas.width,canvas.height);
+
+	context.fillStyle = "white";
+	context.fillRect(0,0,2000,2600);
+	context.font = "18px Arial";
+
+	var base_y = 50;
+	var name_width = 200;
+	var body_width = 1500;
+	var row_height = 34;
+	var pad_x = 5;
+	var pad_y = 25;
+	var win_width = 50;
+	var get_width = 100;
+	var detail_x = name_width + body_width;
+
+	context.lineWidth = 1;
+	context.strokeStyle = "DarkSlategray";
+	context.fillStyle = "black";
+
+	for (var i=0; i<vm.table.grps.length; i++){
+		rect(0,base_y,name_width,row_height);
+		filltext("Group:" + (i+1), pad_x, base_y+pad_y);
+		var cols = vm.table.grps[i].rows.length;
+		for (var j=0; j<cols; j++){
+			var x= name_width + j*body_width/cols;
+			rect( x ,base_y,body_width/cols,row_height);
+			filltext(vm.table.grps[i].rows[j].name, x + pad_x, base_y+pad_y);
+		}
+		rect(detail_x,base_y,win_width,row_height);
+		filltext(W[51], detail_x + pad_x, base_y+pad_y);
+		rect(detail_x + win_width,base_y,win_width,row_height);
+		filltext(W[52], detail_x + + win_width + pad_x, base_y+pad_y);
+		rect(detail_x + win_width*2,base_y,get_width,row_height);
+		filltext(W[53], detail_x + + win_width*2 + pad_x, base_y+pad_y);
+		rect(detail_x + win_width*2 + get_width,base_y,get_width,row_height);
+		filltext(W[54], detail_x + + win_width*2 + get_width + pad_x, base_y+pad_y);
+		base_y += row_height;
+		for (var j=0; j<cols; j++){
+			rect(0,base_y,name_width,row_height);
+			filltext("(" + vm.table.grps[i].rows[j].rank + ")" + vm.table.grps[i].rows[j].name, pad_x, base_y +pad_y);
+			for (var k=0; k<cols; k++){
+				var x= name_width + k*body_width/cols;
+				rect( x ,base_y ,body_width/cols,row_height);
+				filltext(vm.table.grps[i].rows[j].cols[k].text, x + pad_x, base_y +pad_y);
+			}
+			rect(detail_x,base_y ,win_width,row_height);
+			filltext(vm.table.grps[i].rows[j].w, detail_x + pad_x, base_y +pad_y);
+			rect(detail_x + win_width,base_y ,win_width,row_height);
+			filltext(vm.table.grps[i].rows[j].l, detail_x + + win_width + pad_x, base_y + pad_y);
+			rect(detail_x + win_width*2,base_y,get_width,row_height);
+			filltext(vm.table.grps[i].rows[j].get + "/" + vm.table.grps[i].rows[j].handy1, detail_x + + win_width*2 + pad_x, base_y + pad_y);
+			rect(detail_x + win_width*2 + get_width,base_y ,get_width,row_height);
+			filltext(vm.table.grps[i].rows[j].lost + "/" + vm.table.grps[i].rows[j].handy2, detail_x + + win_width*2 + get_width + pad_x, base_y + pad_y);
+			base_y += row_height;
+		}
+		base_y += row_height;
+	}
+/*
+	context.fillStyle = "green";
+	context.fillText(W[41], 400, 40);
+
+	context.lineWidth = 4;
+	context.strokeStyle = "DarkSlategray";
+
+	context.beginPath();
+	move(wX1, wY1);
+	line(wX_next,wY_next);
+	context.stroke();
+	rect(700,wY_next-60,400,60);
+	filltext(winnerNm, 760, wY_next-30);
+*/
+	$('#open_league').hide();
+	$('#canvas').show();
 }
 ///	///	///	///	///	///	///	///	///	///	/////				footer table関連			///
 function open_setEnabledTable(num,flg){
@@ -1930,20 +2014,6 @@ function showLeagueHonsenPlayer_pop(grp){
 	}
 }
 function showHonsenResultLeague(){
-	//intel.xdk.player.playSound("sounds/select.mp3");
-	 //showPopFrame("open/showConfirmPlayer",{group:1},600, successFnc_showHonsenResultLeaguep, true, "本戦リーグ結果");
-
-	/*var s='<div id="total_result" style="overflow:scroll;">';
-	s+='<table id="confirm_table" style="width:100%;">';
-	s+='<colgroup span="3" style="text-align:center;">';
-	s+='<tr>';
-	s+='<th>Rank</th>';
-	s+='<th>Name</th>';
-	s+='<th>Win</th>';
-	s+='<th>Loose</th>';
-	s+='<th>Get</th>';
-	s+='<th>Lost</th>';
-	s+='</tr>';*/
 	var grp = vm.grp;
 	wRank = 1;
 	var wchk = [];
@@ -1972,14 +2042,6 @@ function showHonsenResultLeague(){
 			saveMax = wMax;
 		}
 		var wPlayer = wMaxPlayer;
-		/*s+="<tr>";
-		s+="<td>" + wRank + "</td>";
-		s+="<td>" + vm.ENTRIES[wPlayer].NAME + "</td>";
-		s+="<td>" + open.result[wPlayer].win + "</td>";
-		s+="<td>" + open.result[wPlayer].loose + "</td>";
-		s+="<td>" + getDiv1(open.result[wPlayer].get*100,  open.result[wPlayer].get_all) + "%(" + open.result[wPlayer].get + "/" + open.result[wPlayer].get_all + ")</td>";
-		s+="<td>" + getDiv1(open.result[wPlayer].lost*100,  open.result[wPlayer].lost_all) + "%(" + open.result[wPlayer].lost + "/" + open.result[wPlayer].lost_all + ")</td>";
-		s+="</tr>";*/
 		open.selectPlayer.list.push({
 			player: wPlayer,
 			rank: wRank ,
@@ -1992,14 +2054,6 @@ function showHonsenResultLeague(){
 		})
 
 	}
-	open.modal_honsenResult_league.show();
-	/*s+="</table></div>";
-	$("#afui").popup({ title:msg(66),
-      message:s,
-      cancelText:"OK",
-      cancelCallback: function(){open_click_ok_confirm();},
-      cancelOnly:true}
-    );*/
 	//showLeagueHonsenPlayer_pop();
 }
 ///	///	///	///	///	///	///	///	///	///	/////				テーブル描画				///
@@ -2679,7 +2733,6 @@ function open_showTreeTable(){
 	 open_procShowTreeTable();
 }
 function open_procShowTreeTable(){
-	console.debug("center", x_center);
 	//var x_scale = 1600/19;
 	//var y_scale = 32;
 	var y_base = 60;
@@ -3768,7 +3821,7 @@ function procShowLeagueTable(){
 			setLeagueYosenResult();
 		} else if (vm.nIsHonsen==1 && vm.FORMAT.STATUS==3){
 			setLeagueHonsenResult();
-			showHonsenResultLeague();
+			//showHonsenResultLeague();
 		}
 	} else {
 		for (var i=0; i<open.groups; i++){
@@ -3855,6 +3908,9 @@ function setLeagueYosenResult(){
 
 	var wRank;
 	var leagueWinner = parseInt(vm.FORMAT['H_NUMBER'])/open.groups;
+	for (var i=0; i<vm.ENTRIES.length; i++){
+		open.result[i] = new result_def(0,0,0,0,0,0,0);
+	}
 	for (var i=0; i<vm.table.grps.length; i++){
 		var wchk = [];
 		vm.grpRank[i] = [];
@@ -3884,6 +3940,14 @@ function setLeagueYosenResult(){
 				vm.table.grps[i].rows[wMaxPlayer].honsen = 1;
 				//vm.table.grps[i].rows[wMaxPlayer].color = "red";
 			}
+			var entryNo = grpPlayer[i][wMaxPlayer];
+			open.result[entryNo].win = vm.table.grps[i].rows[wMaxPlayer].w;
+			open.result[entryNo].loose = vm.table.grps[i].rows[wMaxPlayer].l;
+			open.result[entryNo].get = vm.table.grps[i].rows[wMaxPlayer].get;
+			open.result[entryNo].lost= vm.table.grps[i].rows[wMaxPlayer].lost;
+			open.result[entryNo].get_all = vm.table.grps[i].rows[wMaxPlayer].handy1;
+			open.result[entryNo].lost_all = vm.table.grps[i].rows[wMaxPlayer].handy2;
+			open.result[entryNo].honsen = vm.table.grps[i].rows[wMaxPlayer].honsen;
 		}
 
 	}
@@ -3942,6 +4006,8 @@ function click_leagueTr(grp,row){
 	if (vm.isFin==true && vm.nIsHonsen==0){
 		var val = vm.table.grps[grp].rows[row].honsen;
 		vm.table.grps[grp].rows[row].honsen = 1-val;
+		var entryNo = grpPlayer[grp][row];
+		open.result[entryNo].honsen = 1-val;
 	}
 }
 //本戦進出者色セット
@@ -3959,7 +4025,7 @@ function showLeagueHonsenPlayer(){
 		}
 	}
 }
-function setLeagueHonsenResult(){
+/*function setLeagueHonsenResult(){
 	var wRank;
 	var wWinner;
 	var wLooser;
@@ -3988,10 +4054,6 @@ function setLeagueHonsenResult(){
 			open.result[wPlayer2].lost+= open.league[i].score1;
 			open.result[wPlayer2].get+= open.league[i].score2;
 			open.result[wPlayer1].lost+= open.league[i].score2;
-			/*open.result[wPlayer1].get_all+= wHandy1 ;
-			open.result[wPlayer2].lost_all+= wHandy1 ;
-			open.result[wPlayer2].get_all+= wHandy2;
-			open.result[wPlayer1].lost_all+= wHandy2;*/
 
 			open.result[wPlayer1].get_all+= wHandy1;
 			open.result[wPlayer2].lost_all+= wHandy1;
@@ -4001,6 +4063,46 @@ function setLeagueHonsenResult(){
 		}
 		open.result[wPlayer1].honsen = 1;
 		open.result[wPlayer2].honsen = 1;
+	}
+}*/
+function setLeagueHonsenResult(){
+	var wRank;
+	for (var i=0; i<vm.ENTRIES.length; i++){
+		open.result[i] = new result_def(0,0,0,0,0,0,0);
+	}
+	var i=0;
+	var wchk = [];
+	vm.grpRank[i] = [];
+	for (var j=0; j<grpPlayer[i].length; j++){
+		wchk[j] = false;
+	}
+	var saveMax = 0;
+	for (var j=0; j<vm.table.grps[i].rows.length; j++){
+		var wMax = -1;
+		var wMaxPlayer = -1;
+		for (var k=0; k<vm.table.grps[i].rows[j].cols.length; k++){
+			if (wchk[k] == false){
+				var wValue = (vm.table.grps[i].rows[k].w *1000000 + ( vm.table.grps[i].rows[k].get/ vm.table.grps[i].rows[k].handy1*1000)*1000 + ( 1000- vm.table.grps[i].rows[k].lost/ vm.table.grps[i].rows[k].handy2*1000));
+				if (wMax<wValue){
+					wMaxPlayer = k;
+					wMax = wValue;
+				}
+			}
+		}
+		wchk[wMaxPlayer] = true;
+		if (saveMax!=wMax){
+			wRank = j+1;
+			saveMax = wMax;
+		}
+		vm.table.grps[i].rows[wMaxPlayer].rank = wRank;
+		var entryNo = grpPlayer[i][wMaxPlayer];
+		open.result[entryNo].win = vm.table.grps[i].rows[wMaxPlayer].w;
+		open.result[entryNo].loose = vm.table.grps[i].rows[wMaxPlayer].l;
+		open.result[entryNo].get = vm.table.grps[i].rows[wMaxPlayer].get;
+		open.result[entryNo].lost= vm.table.grps[i].rows[wMaxPlayer].lost;
+		open.result[entryNo].get_all = vm.table.grps[i].rows[wMaxPlayer].handy1;
+		open.result[entryNo].lost_all = vm.table.grps[i].rows[wMaxPlayer].handy2;
+		open.result[entryNo].honsen = 1;
 	}
 }
 ///	///	///	///	///	///	///	///	///	///	/////				get						///
