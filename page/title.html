@@ -39,7 +39,8 @@
 						<th width="30px"></th>
             <th width="30px"></th>
 						<th width="150px" onclick="index.th_click(1);">{{ W[24] }}</th>
-						<th width="100px" onclick="index.th_click(2);">{{ W[25] }}</th>
+						<th v-show="GAME<10" width="100px" onclick="index.th_click(2);">{{ W[25] }}</th>
+            <th v-show="GAME>=10" width="100px" onclick="index.th_click(7);">SL</th>
 						<th width="150px" onclick="index.th_click(3);">{{ W[26] }}</th>
 						<th class='ampm' width="120px" v-show="(Y_TYPE==0 && H_TYPE!=4) || (Y_TYPE!=0 && Y_TYPE!=4)" onclick="index.th_click(4);">{{ W[27] }}</th>
 						<th class='yosenHandy' width="100px" v-show="Y_TYPE!=0" onclick="index.th_click(5);">{{ W[28] }}</th>
@@ -57,14 +58,27 @@
 			      <td>
               <input id="name{{ index }}" type="text" class="form-control" v-model="entry.NAME" maxlength="12" placeholder="{{ M[0] }}">
             </td>
-			      <td>
-              <select v-model="entry.SKILL" class="form-control">
+			      <td v-show="GAME<10">
+              <select id="skill{{ index }}" v-model="entry.SKILL" class="form-control" onchange="index.changeSkill({{ index }});">
         					<option value="0">Beginner</option>
         					<option value="1">C</option>
         					<option value="2">B</option>
         					<option value="3">A</option>
         					<option value="4">SA</option>
         					<option value="5">Pro</option>
+        			</select>
+            </td>
+            <td v-show="GAME>=10">
+              <select id="sl{{ index }}" v-model="entry.SL" class="form-control" onchange="index.changeSl({{ index }});">
+        					<option value="0">SL1</option>
+        					<option value="1">SL2</option>
+        					<option value="2">SL3</option>
+        					<option value="3">SL4</option>
+        					<option value="4">SL5</option>
+        					<option value="5">SL6</option>
+                  <option value="6">SL7</option>
+        					<option value="7">SL8</option>
+        					<option value="8">SL9</option>
         			</select>
             </td>
 			      <td>
@@ -96,6 +110,6 @@
         {{ W[23] }}
       </button>
 		</form>
-    <button class="btn btn-form btn-default" style="position:absolute; bottom:10px; left:10px;" onclick="index.click_Save();">{{ W[33] }}</button>
+    <button class="btn btn-form btn-warning" style="position:absolute; bottom:10px; left:10px;" onclick="index.click_Save();">{{ W[33] }}</button>
     <button class="btn btn-form btn-primary" style="position:absolute; bottom:10px; right:10px;" onclick="index.click_Open();">{{ W[34] }}</button>
 </div>

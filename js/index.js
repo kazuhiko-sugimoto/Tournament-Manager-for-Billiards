@@ -12,7 +12,7 @@ function init_index(){
    }
   format.init();
 
-  //index.createPlayer_debug();
+  //index.createPlayer_debug(8);
 
   if (format.vm.STATUS==4){
     t_cd++;
@@ -29,6 +29,9 @@ function init_index(){
           Y_HANDY3: 5,
           Y_HANDY4: 6,
           Y_HANDY5: 7,
+          Y_HANDY6: 0,
+          Y_HANDY7: 0,
+          Y_HANDY8: 0,
           H_NUMBER: 8,
           H_TYPE: 1,
           H_HANDY0: 2,
@@ -37,6 +40,9 @@ function init_index(){
           H_HANDY3: 5,
           H_HANDY4: 6,
           H_HANDY5: 7,
+          H_HANDY6: 0,
+          H_HANDY7: 0,
+          H_HANDY8: 0,
           H_THIRD: 1,
           STATUS: 0
       }
@@ -52,6 +58,7 @@ function init_index(){
        CD: r.CD,
        NAME: r.NAME,
        SKILL: r.SKILL,
+       SL: r.SL,
        HALL: r.HALL,
        Y_HANDY: r.Y_HANDY,
        H_HANDY: r.H_HANDY,
@@ -80,13 +87,14 @@ function init_index(){
   }*/
 
 }
-index.createPlayer_debug = function(){
+index.createPlayer_debug = function(num){
   ENTRY({T_CD:{'==':t_cd}}).remove();
   var cd = 1;
-  for (var i=0; i<12; i++){
+  for (var i=0; i<num; i++){
     var name = "鈴木　一郎"+i;
     var hall = "At Pool";
     var skill = 2;
+    var sl = 6;
     var y_handy = 4;
     var h_handy = 4;
     var ampm = 0;
@@ -96,6 +104,7 @@ index.createPlayer_debug = function(){
       		CD: parseInt(cd),
           NAME: name,
           SKILL: parseInt(skill),
+          SL: parseInt(sl),
           HALL: hall,
           Y_HANDY: parseInt(y_handy),
           H_HANDY:  parseInt(h_handy),
@@ -127,7 +136,12 @@ index.clickFormat_callback = function(){
   index.vm.Y_TYPE = format.vm.Y_TYPE;
   index.vm.H_TYPE = format.vm.H_TYPE;
   for (var i=0; i<index.vm.entries.length; i++){
-    var skill = index.vm.entries[i].SKILL;
+    var skill;
+    if (index.vm.GAME<10){
+      skill = index.vm.entries[i].SKILL;
+    } else {
+      skill = index.vm.entries[i].SL;
+    }
     index.vm.entries[i].Y_HANDY = format.vm["Y_HANDY" + skill];
     index.vm.entries[i].H_HANDY = format.vm["H_HANDY" + skill];
   }
@@ -141,9 +155,10 @@ index.addRow = function(){
   index.vm.entries.push({
     NAME: "",
     SKILL: 2,
+    SL: 5,
     HALL: "",
-    Y_HANDY: format.vm.Y_HANDY2,
-    H_HANDY: format.vm.H_HANDY2,
+    Y_HANDY: index.vm.GAME<10 ? format.vm.Y_HANDY2 : format.vm.Y_HANDY5,
+    H_HANDY: index.vm.GAME<10 ? format.vm.H_HANDY2 : format.vm.H_HANDY5,
     AM_PM: 0
   })
 }
@@ -171,6 +186,7 @@ index.click_Save = function(){
     var name = index.vm.entries[i].NAME.trim();
     var hall = index.vm.entries[i].HALL.trim();
     var skill = index.vm.entries[i].SKILL;
+    var sl = index.vm.entries[i].SL;
     var y_handy = index.vm.entries[i].Y_HANDY;
     var h_handy = index.vm.entries[i].H_HANDY;
     var ampm = index.vm.entries[i].AM_PM;
@@ -210,6 +226,7 @@ index.click_Save = function(){
     var name = index.vm.entries[i].NAME.trim();
     var hall = index.vm.entries[i].HALL.trim();
     var skill = index.vm.entries[i].SKILL;
+    var sl = index.vm.entries[i].SL;
     var y_handy = index.vm.entries[i].Y_HANDY;
     var h_handy = index.vm.entries[i].H_HANDY;
     var ampm = index.vm.entries[i].AM_PM;
@@ -219,6 +236,7 @@ index.click_Save = function(){
       		CD: parseInt(cd),
           NAME: name,
           SKILL: parseInt(skill),
+          SL: parseInt(sl),
           HALL: hall,
           Y_HANDY: parseInt(y_handy),
           H_HANDY:  parseInt(h_handy),
@@ -274,7 +292,8 @@ index.addByList_callback = function(){
     data: {
       formats: formats,
       entries: [],
-      t_cd: recentCd
+      t_cd: recentCd,
+      game: index.vm.GAME
     }
   });
 
@@ -299,7 +318,9 @@ index.addByList_getEntries = function(recentCd){
         NAME: r.NAME,
         HALL: r.HALL,
         SKILL_NM: sSkill[r.SKILL],
+        SL_NM: sSL[r.SL],
         SKILL: r.SKILL,
+        SL: r.SL,
         CHK: false
       });
     }
@@ -307,8 +328,8 @@ index.addByList_getEntries = function(recentCd){
   index.playerListVm.entries = entries;
 }
 index.getPlayerList = function(){
-  var y_handy = [format.vm.Y_HANDY0,format.vm.Y_HANDY1,format.vm.Y_HANDY2,format.vm.Y_HANDY3,format.vm.Y_HANDY4,format.vm.Y_HANDY5];
-  var h_handy = [format.vm.H_HANDY0,format.vm.H_HANDY1,format.vm.H_HANDY2,format.vm.H_HANDY3,format.vm.H_HANDY4,format.vm.H_HANDY5];
+  var y_handy = [format.vm.Y_HANDY0,format.vm.Y_HANDY1,format.vm.Y_HANDY2,format.vm.Y_HANDY3,format.vm.Y_HANDY4,format.vm.Y_HANDY5,format.vm.Y_HANDY6,format.vm.Y_HANDY7,format.vm.Y_HANDY8];
+  var h_handy = [format.vm.H_HANDY0,format.vm.H_HANDY1,format.vm.H_HANDY2,format.vm.H_HANDY3,format.vm.H_HANDY4,format.vm.H_HANDY5,format.vm.H_HANDY6,format.vm.H_HANDY7,format.vm.H_HANDY8];
   for (var i=0; i<index.playerListVm.entries.length; i++){
     if (index.playerListVm.entries[i].CHK){
       var r = index.playerListVm.entries[i];
@@ -316,9 +337,10 @@ index.getPlayerList = function(){
         CD: r.CD,
         NAME: r.NAME,
         SKILL: r.SKILL,
+        SL: r.SL,
         HALL: r.HALL,
-        Y_HANDY: y_handy[r.SKILL],
-        H_HANDY: h_handy[r.SKILL],
+        Y_HANDY: index.vm.GAME<10 ? y_handy[r.SKILL] : y_handy[r.SL],
+        H_HANDY: index.vm.GAME<10 ? h_handy[r.SKILL] : h_handy[r.SL],
         AM_PM: 0,
         RANK: null
       })
@@ -370,6 +392,12 @@ index.th_click = function(num){
 		case -6:
 			index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return -obj.H_HANDY});
 			break;
+    case 7:
+			index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return obj.SL});
+			break;
+		case -7:
+			index.vm.entries = _.sortBy(index.vm.entries, function(obj){ return -obj.SL});
+			break;
 
 	}
 }
@@ -406,4 +434,63 @@ index.historyOk = function(cd){
   mnHistory = 1;
   t_cd = cd;
   goto("open");
+}
+index.changeSkill = function(idx){
+  var skill = parseInt($('#skill'+idx).val());
+  index.vm.entries[idx].Y_HANDY = format.vm["Y_HANDY" + skill];
+  index.vm.entries[idx].H_HANDY = format.vm["H_HANDY" + skill];
+  switch (skill){
+    case 0:
+      index.vm.entries[idx].SL = 1;
+      break;
+    case 1:
+      index.vm.entries[idx].SL = 3;
+      break;
+    case 2:
+      index.vm.entries[idx].SL = 5;
+      break;
+    case 3:
+      index.vm.entries[idx].SL = 6;
+      break;
+    case 4:
+      index.vm.entries[idx].SL = 8;
+      break;
+    case 5:
+      index.vm.entries[idx].SL = 8;
+      break;
+  }
+}
+index.changeSl = function(idx){
+  var sl = parseInt($('#sl'+idx).val());
+  index.vm.entries[idx].Y_HANDY = format.vm["Y_HANDY" + sl];
+  index.vm.entries[idx].H_HANDY = format.vm["H_HANDY" + sl];
+  switch (sl){
+    case 0:
+      index.vm.entries[idx].SKILL = 0;
+      break;
+    case 1:
+      index.vm.entries[idx].SKILL = 0;
+      break;
+    case 2:
+      index.vm.entries[idx].SKILL = 1;
+      break;
+    case 3:
+      index.vm.entries[idx].SKILL = 1;
+      break;
+    case 4:
+      index.vm.entries[idx].SKILL = 2;
+      break;
+    case 5:
+      index.vm.entries[idx].SKILL = 2;
+      break;
+    case 6:
+      index.vm.entries[idx].SKILL = 2;
+      break;
+    case 7:
+      index.vm.entries[idx].SKILL = 3;
+      break;
+    case 8:
+      index.vm.entries[idx].SKILL = 3;
+      break;
+  }
 }

@@ -2,6 +2,7 @@ window.jQuery = window.$ = require('./js/jquery-2.1.4.min');
 var _ = require('./js/underscore-min');
 
 var sSkill = new Array("bg","C","B","A","SA","PRO");
+var sSL = new Array("SL1","SL2","SL3","SL4","SL5","SL6","SL7","SL8","SL9");
 
 var nScore = [];
 

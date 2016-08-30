@@ -33,6 +33,9 @@ format.init = function(){
         Y_HANDY3: r.Y_HANDY3,
         Y_HANDY4: r.Y_HANDY4,
         Y_HANDY5: r.Y_HANDY5,
+        Y_HANDY6: r.Y_HANDY6,
+        Y_HANDY7: r.Y_HANDY7,
+        Y_HANDY8: r.Y_HANDY8,
         H_NUMBER: r.H_NUMBER,
         H_TYPE: r.H_TYPE,
         H_HANDY0: r.H_HANDY0,
@@ -41,8 +44,12 @@ format.init = function(){
         H_HANDY3: r.H_HANDY3,
         H_HANDY4: r.H_HANDY4,
         H_HANDY5: r.H_HANDY5,
+        H_HANDY6: r.H_HANDY6,
+        H_HANDY7: r.H_HANDY7,
+        H_HANDY8: r.H_HANDY8,
         H_THIRD: r.H_THIRD,
-        STATUS: r.STATUS
+        STATUS: r.STATUS,
+        DATE: r.DATE
       }
     })
   } else {
@@ -62,6 +69,9 @@ format.init = function(){
         Y_HANDY3: 5,
         Y_HANDY4: 6,
         Y_HANDY5: 7,
+        Y_HANDY6: 0,
+        Y_HANDY7: 0,
+        Y_HANDY8: 0,
         H_NUMBER: 8,
         H_TYPE: 1,
         H_HANDY0: 2,
@@ -70,6 +80,9 @@ format.init = function(){
         H_HANDY3: 5,
         H_HANDY4: 6,
         H_HANDY5: 7,
+        H_HANDY6: 6,
+        H_HANDY7: 7,
+        H_HANDY8: 8,
         H_THIRD: 1,
         STATUS: 0
       }
@@ -94,10 +107,16 @@ format.changeGame = function(){
     case "7":
       w_handy = [30,60,90,120,180,240];
       break;
+    case "10":
+      w_handy = [10,20,30,40,50,60,70,80,90];
+      break;
+    case "11":
+      w_handy = [5,10,15,20,25,30,35,40,45];
+      break;
     default:
       w_handy = [2,3,4,5,7,9];
   }
-  for (var i=0; i<6; i++){
+  for (var i=0; i<w_handy.length; i++){
     format.vm['Y_HANDY'+ i] =w_handy[i];
     format.vm['H_HANDY'+ i] =w_handy[i];
   }
@@ -115,6 +134,9 @@ format.save = function(){
   var y_handy3 = format.vm.Y_HANDY3;
   var y_handy4 = format.vm.Y_HANDY4;
   var y_handy5 = format.vm.Y_HANDY5;
+  var y_handy6 = format.vm.Y_HANDY6;
+  var y_handy7 = format.vm.Y_HANDY7;
+  var y_handy8 = format.vm.Y_HANDY8;
   var h_type = format.vm.H_TYPE;
   var h_third = format.vm.H_THIRD;
   var h_handy0 = format.vm.H_HANDY0;
@@ -123,6 +145,9 @@ format.save = function(){
   var h_handy3 = format.vm.H_HANDY3;
   var h_handy4 = format.vm.H_HANDY4;
   var h_handy5 = format.vm.H_HANDY5;
+  var h_handy6 = format.vm.H_HANDY6;
+  var h_handy7 = format.vm.H_HANDY7;
+  var h_handy8 = format.vm.H_HANDY8;
 
   if (!name || name==W[37]){
     $('#errMsg_format').text(M[4]);
@@ -155,6 +180,21 @@ format.save = function(){
       $('#y_handy5').focus();
       return false;
     }
+    if (format.vm.GAME==10){
+      if (!y_handy6 || y_handy6>255 || y_handy6<1){
+        $('#errMsg_format').text(M[1]);
+        $('#y_handy6').focus();
+        return false;
+      } else if (!y_handy7 || y_handy7>255 || y_handy7<1){
+        $('#errMsg_format').text(M[1]);
+        $('#y_handy7').focus();
+        return false;
+      } else if (!y_handy8 || y_handy8>255 || y_handy8<1){
+        $('#errMsg_format').text(M[1]);
+        $('#y_handy8').focus();
+        return false;
+      }
+    }
   }
   if (!h_handy0 || h_handy0>255 || h_handy0<1){
     $('#errMsg_format').text(M[1]);
@@ -181,6 +221,21 @@ format.save = function(){
     $('#h_handy5').focus();
     return false;
   }
+  if (format.vm.GAME==10){
+    if (!h_handy6 || h_handy6>255 || h_handy6<1){
+      $('#errMsg_format').text(M[1]);
+      $('#h_handy6').focus();
+      return false;
+    } else if (!h_handy7 || h_handy7>255 || h_handy7<1){
+      $('#errMsg_format').text(M[1]);
+      $('#h_handy7').focus();
+      return false;
+    } else if (!h_handy8 || h_handy8>255 || h_handy8<1){
+      $('#errMsg_format').text(M[1]);
+      $('#h_handy8').focus();
+      return false;
+    }
+  }
   FORMAT({CD:{'==':t_cd}}).remove();
   FORMAT.insert(
       {
@@ -195,6 +250,9 @@ format.save = function(){
         Y_HANDY3: parseInt(y_handy3),
         Y_HANDY4: parseInt(y_handy4),
         Y_HANDY5: parseInt(y_handy5),
+        Y_HANDY6: parseInt(y_handy6),
+        Y_HANDY7: parseInt(y_handy7),
+        Y_HANDY8: parseInt(y_handy8),
         H_NUMBER: parseInt(h_number),
         H_TYPE: parseInt(h_type),
         H_HANDY0: parseInt(h_handy0),
@@ -203,6 +261,9 @@ format.save = function(){
         H_HANDY3: parseInt(h_handy3),
         H_HANDY4: parseInt(h_handy4),
         H_HANDY5: parseInt(h_handy5),
+        H_HANDY6: parseInt(h_handy6),
+        H_HANDY7: parseInt(h_handy7),
+        H_HANDY8: parseInt(h_handy8),
         H_THIRD: parseInt(h_third),
         STATUS: parseInt(format.vm.STATUS)
     }

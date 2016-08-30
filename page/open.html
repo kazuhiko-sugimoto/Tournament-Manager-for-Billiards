@@ -10,25 +10,29 @@
         </button>
       </div>
       <div class="btn-group">
-        <button v-show="isShowSettings" class="btn btn-default" onclick="clickFormat();">
+        <button v-show="isShowSettings" class="btn btn-default" onclick="open_clickFormat();">
           <span class="icon icon-cog"></span>
+          {{ W[35] }}
         </button>
         <button v-show="nHistory" class="btn btn-default" onclick="open_click_outputPdf();">
           <span class="icon icon-download"></span>
+          {{ M[19] }}
         </button>
         <button v-show="isShowShuffle" class="btn btn-default" onclick="open_click_shuffle();">
           <span class="icon icon-shuffle"></span>
         </button>
-        <button v-show="isShowReset" class="btn btn-default" onclick="open_click_tReset();">
+      </div>
+      <div class="btn-group">
+        <button v-show="isShowReset" class="btn btn-negative" onclick="open_click_tReset();">
           <span class="icon icon-trash"></span>
         </button>
       </div>
 
       <div class="btn-group">
-        <button v-show="isShowNav0" class="btn btn-default" onclick="open_click_nav(0);">
+        <button v-show="isShowNav0" class="btn btn-default {{nIsHonsen==0 ? 'active' : ''}}" onclick="open_click_nav(0);">
           {{ W[2]}}
         </button>
-        <button v-show="isShowNav1" class="btn btn-default" onclick="open_click_nav(1);">
+        <button v-show="isShowNav1" class="btn btn-default {{nIsHonsen==1 ? 'active' : ''}}" onclick="open_click_nav(1);">
           {{ W[15] }}
         </button>
       </div>

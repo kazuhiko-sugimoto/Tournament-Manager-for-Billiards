@@ -9,7 +9,8 @@
       		<td></td>
       		<td>Name</td>
           <td>Hall</td>
-          <td>Class</td>
+          <td v-show="game<10">Class</td>
+          <td v-show="game>=10">SL</td>
       	</tr>
       </thead>
       <tbody>
@@ -17,7 +18,8 @@
           <td><input type="checkbox" v-model="entry.CHK"></td>
   			  <td>{{entry.NAME}}</td>
   			  <td>{{entry.HALL}}</td>
-          <td>{{entry.SKILL_NM}}</td>
+          <td v-show="game<10">{{entry.SKILL_NM}}</td>
+          <td v-show="game>=10">{{entry.SL_NM}}</td>
       	</tr>
       </tbody>
     </table>

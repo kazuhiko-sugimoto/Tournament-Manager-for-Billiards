@@ -222,20 +222,31 @@ function open_refresh(){
 	open_switch_nav(vm.nIsHonsen);
 
 	changeLayout();
+
 }
 function open_get_entryNum(){
 	if (vm.nIsHonsen==0){
 		vm.entryNum = vm.ENTRIES.length;
 	} else {
-		vm.entryNum = 0;
-		for (var i=0; i<vm.ENTRIES.length; i++){
-			if (vm.ENTRIES[i].RANK==null){
-				vm.entryNum++;
+		/*if (mnHistory==0){
+			vm.entryNum = 0;
+			for (var i=0; i<vm.ENTRIES.length; i++){
+					if (vm.ENTRIES[i].RANK==null){
+						vm.entryNum++;
+					}
 			}
-		}
+		} else {*/
+			vm.entryNum = vm.FORMAT.H_NUMBER;
+		//}
 	}
-	lh = ((20*40)/vm.ENTRIES.length);
+	var num = vm.entryNum;
+	if (vm.FORMAT.H_THRD==1){
+		num+=2;
+	}
+	lh = (600/vm.entryNum);
 	if (lh<40) lh=40;
+	var w_height = vm.entryNum*lh+100;
+	$('#canvas').attr("height",w_height)
 	/*var b_height = getBrowserHeight();
 	lh = ((b_height-40)/vm.ENTRIES.length)*1.5;
 	if (lh<40) lh=40;
@@ -306,7 +317,7 @@ function open_switch_nav(num){
 function changeLayout(){
 	$("#t_condition").text("参加人数:" + vm.ENTRIES.length+"人");
 
-	if ((vm.FORMAT.Y_TYPE==0 && (vm.FORMAT.STATUS!=0 && vm.FORMAT.STATUS!=2)) || vm.ENTRIES.length<8){
+	if (vm.FORMAT.Y_TYPE==0){
 		vm.isShowNav0 = false;
 	} else {
 		vm.isShowNav0 = true;
@@ -317,7 +328,7 @@ function changeLayout(){
 	} else {
 		vm.isShowNav1 = false;
 	}
-	if (vm.FORMAT.STATUS==4 || open.nHistory==1){
+	if (vm.FORMAT.STATUS==4 || vm.nHistory==1){
 		vm.isShowResult = true;
 	} else {
 		vm.isShowResult = false;
@@ -340,10 +351,11 @@ function changeLayout(){
 				//vm.isShowFootArea = true; //dispShow("#open_footArea");
 			}
 		} else {
+
 			vm.isShowShuffle = true;
 			vm.isShowOpen =true;
 			vm.isShowReset = false;
-			if (open.nHistory==0){
+			if (vm.nHistory!=1){
 				vm.isShowSettings = true;
 			} else {
 				vm.isShowSettings = false;
@@ -893,17 +905,24 @@ function click_grp(index){
 function open_click_outputPdf(){
 	if (vm.tType==4){
 		open_drawLeagueCanvas();
-		return;
 	}
-	Canvas2Image.saveAsPNG(canvas, 2000, 2600);
+	context.fillStyle = "black";
+	context.font = "bold 26px 'HG正楷書体-PRO'";
+	filltext(vm.FORMAT.NAME, 800, 25);
+	context.font = "18px Arial";
+	if (vm.nIsHonsen==0 && vm.FORMAT.Y_TYPE!=0){
+		filltext(W[2], 25, 25);
+	} else if (vm.nIsHonsen==1 && vm.FORMAT.Y_TYPE!=0){
+		filltext(W[15], 25, 25);
+	}
+	filltext(vm.FORMAT.DATE, 1850, 25);
+
+	context.font = "italic bold 26px 'HG正楷書体-PRO'";
+	filltext("mobile × billiards   KAZUsoftware", 1550, canvas.height-20);
+
+	Canvas2Image.saveAsPNG(canvas, canvas.width, canvas.height);
 }
 function open_drawLeagueCanvas(){
-	context.clearRect(0,0,canvas.width,canvas.height);
-
-	context.fillStyle = "white";
-	context.fillRect(0,0,2000,2600);
-	context.font = "18px Arial";
-
 	var base_y = 50;
 	var name_width = 200;
 	var body_width = 1500;
@@ -914,10 +933,28 @@ function open_drawLeagueCanvas(){
 	var get_width = 100;
 	var detail_x = name_width + body_width;
 
+	var height = base_y;
+	for (var i=0; i<vm.table.grps.length; i++){
+		var cols = vm.table.grps[i].rows.length;
+		height += row_height;
+		for (var j=0; j<cols; j++){
+				height += row_height;
+		}
+		height += row_height;
+	}
+	height += row_height;
+
+	$('#canvas').attr("height", height);
+	context.clearRect(0,0,canvas.width,canvas.height);
+
+	context.fillStyle = "white";
+	context.fillRect(0,0,canvas.width,canvas.height);
+
 	context.lineWidth = 1;
 	context.strokeStyle = "DarkSlategray";
-	context.fillStyle = "black";
 
+	context.fillStyle = "black";
+	context.font = "18px Arial";
 	for (var i=0; i<vm.table.grps.length; i++){
 		rect(0,base_y,name_width,row_height);
 		filltext("Group:" + (i+1), pad_x, base_y+pad_y);
@@ -956,22 +993,17 @@ function open_drawLeagueCanvas(){
 		}
 		base_y += row_height;
 	}
-/*
-	context.fillStyle = "green";
-	context.fillText(W[41], 400, 40);
 
-	context.lineWidth = 4;
-	context.strokeStyle = "DarkSlategray";
-
-	context.beginPath();
-	move(wX1, wY1);
-	line(wX_next,wY_next);
-	context.stroke();
-	rect(700,wY_next-60,400,60);
-	filltext(winnerNm, 760, wY_next-30);
-*/
-	$('#open_league').hide();
 	$('#canvas').show();
+	$('#open_league').hide();
+}
+function open_clickFormat(){
+	format.show({
+    callback: open_clickFormat_callback
+  });
+}
+function open_clickFormat_callback(){
+	open_refresh();
 }
 ///	///	///	///	///	///	///	///	///	///	/////				footer table関連			///
 function open_setEnabledTable(num,flg){
@@ -1037,7 +1069,7 @@ function open_click_auto(){
 	var jsonData = [];
 	var i=0;
 	if (vm.tType!=4){
-		TREE({T_CD:{'==':t_cd}, HONSEN:{'==':vm.nIsHonsen}, SCORE1:{'==':null}, SCORE2:{'==':null}}).order("NO asec").each(function (r) {
+		TREE({T_CD:{'==':t_cd}, HONSEN:{'==':vm.nIsHonsen}, SCORE1:{'==':null}, SCORE2:{'==':null}}).order("ZONE desc, NO asec").each(function (r) {
 			if (r.PLAYER1!=null && r.PLAYER2!=null){
 				jsonData[i] = r;
 				i++;
@@ -2453,8 +2485,6 @@ function open_setTreeTable(h_number){
 
 	//シングルイリミでいらない試合の削除
 	if (vm.isSingle==true){
-		//x_scale*=2;
-		x_center=x_center*2-200;
 		for (var i=1; i<=125; i++){
 			if (open.line[i][0][0].x>0){
 				vm.table_check[i][0] = false;
@@ -2468,7 +2498,7 @@ function open_setTreeTable(h_number){
 	}
 
 	//3位決定戦
-	if (vm.isSingle==true && h_number==1 && vm.FORMAT.THIRD==1){
+	if (vm.isSingle==true && h_number==1 && vm.FORMAT.H_THIRD==1){
 
 		vm.table_check[125][0] = true;
 		vm.table_check[125][1] = true;
@@ -2496,7 +2526,6 @@ function open_setTreeTable(h_number){
 
 	}
 	max_x++;
-
 	x_scale = 1600/(max_x - min_x);
 	x_center = 200 - (x_scale * min_x);
 
@@ -2541,7 +2570,7 @@ function open_setTreeTable(h_number){
 			} else if (i==127){
 				//プレーオフ
 				open.tree[gameNo].zone =3;
-			} else if (i==125 && vm.isSingle==true && h_number==1 && vm.FORMAT.THIRD==1){
+			} else if (i==125 && vm.isSingle==true && h_number==1 && vm.FORMAT.H_THIRD==1){
 				//3位決定戦
 				open.tree[gameNo].zone =4;
 			/*} else if (i==125 && vm.isSingle==false){
@@ -2588,10 +2617,12 @@ function open_setTreeTable(h_number){
 						if (j==0){
 							open.tree[gameNo].x1 = w_x;
 							open.tree[gameNo].y1 = w_y;
+
 						} else {
 							open.tree[gameNo].x2 = w_x;
 							open.tree[gameNo].y2 = w_y;
 						}
+
 					} else {
 						//context1.lineTo(w_x,w_y);
 
@@ -2757,15 +2788,14 @@ function open_procShowTreeTable(){
 	context.clearRect(0,0,canvas.width,canvas.height);
 
 	context.fillStyle = "white";
-	context.fillRect(0,0,2000,2600);
-
+	context.fillRect(0,0,canvas.width,canvas.height);
 	context.font = "28px Arial";
 
 	if (vm.isSingle==false){
 		context.fillStyle = "green";
-		context.fillText(W[41], 400, 40);
+		context.fillText(W[41], 400, 60);
 		context.fillStyle = "red";
-		context.fillText(W[42], 1400, 40);
+		context.fillText(W[42], 1400, 60);
 	}
 
 	//vm.entryNum = vm.ENTRIES.length;
@@ -2782,7 +2812,7 @@ function open_procShowTreeTable(){
 		var wX_next	= 0;
 		var wY_next = 0;
 		var winner = 0;
-		//var yh_kbn = (open.tree[i].zone==1 || open.tree[i].zone==3 || open.tree[i].zone==4  | open.tree[i].zone==5) ? 1 : 0;
+		var yh_kbn = (open.tree[i].zone==1 || open.tree[i].zone==3 || open.tree[i].zone==4  | open.tree[i].zone==5) ? 1 : 0;
 		//player1 名前表示
 		if (wX1<=200 || wX1==1800){
 			if (open.tree[i].player1!=null){
@@ -2800,8 +2830,11 @@ function open_procShowTreeTable(){
 				} else {
 					context.fillStyle = open_getPlayColor(vm.ENTRIES[open.tree[i].player1].PLAY);
 				}
-				context.fillText(vm.ENTRIES[open.tree[i].player1].NAME, 20+open.tree[i].zone*1800, wY1+10);
-
+				if (open.tree[i].zone==3 || open.tree[i].zone==1 || open.tree[i].zone==4){
+					context.fillText(vm.ENTRIES[open.tree[i].player1].NAME, 1800, wY1+10);
+				} else {
+					context.fillText(vm.ENTRIES[open.tree[i].player1].NAME, 20, wY1+10);
+				}
 			}
 		}
 		//player2 名前表示
@@ -2822,7 +2855,7 @@ function open_procShowTreeTable(){
 				} else {
 					context.fillStyle = open_getPlayColor(vm.ENTRIES[open.tree[i].player2].PLAY);
 				}
-				if (open.tree[i].zone==3 || open.tree[i].zone==1){
+				if (open.tree[i].zone==3 || open.tree[i].zone==1 || open.tree[i].zone==4){
 					context.fillText(vm.ENTRIES[open.tree[i].player2].NAME, 1800, wY2+10);
 				} else {
 					context.fillText(vm.ENTRIES[open.tree[i].player2].NAME, 20, wY2+10);
@@ -2831,19 +2864,23 @@ function open_procShowTreeTable(){
 		}
 		//決勝
 		if (open.tree[i].zone==2 && vm.isSingle==false){
-			wX_next = -100; //(wX1+wX2)/2;
+			wX_next = (wX1+wX2)/2;
 			if (wY1>wY2){
 				wY_next = wY2;
 			} else {
 				wY_next = wY1;
 			}
 			var winnerNm ="";
+			var wk_final_score1;
+			var wk_final_score2;
 			if (open.tree[i].score1!=null){
 				var wHandy1;
 				var wHandy2;
 				wHandy1 = open_getHandy(open.tree[i].player1);
 				wHandy2 = open_getHandy(open.tree[i].player2);
 				winner = open_getWinner(open.tree[i].score1,open.tree[i].score2,wHandy1,wHandy2);
+				wk_final_score1 = open.tree[i].score1;
+				wk_final_score2 = open.tree[i].score2;
 				/*
 				if (open.tree[i].score1 == wHandy1){
 					winnerNm = vm.ENTRIES[open.tree[i].player1].NAME;
@@ -2873,9 +2910,13 @@ function open_procShowTreeTable(){
 								var w_winner = open_getWinner(open.tree[i+1].score1,open.tree[i+1].score2,w_Handy1,w_Handy2);
 								if (w_winner==1){
 									winnerNm = vm.ENTRIES[open.tree[i].player2].NAME;
+									wk_final_score1 = open.tree[i+1].score2;
+									wk_final_score2 = open.tree[i+1].score1;
 								} else if (w_winner==2){
 									winner = 1;
 									winnerNm = vm.ENTRIES[open.tree[i].player1].NAME;
+									wk_final_score1 = open.tree[i+1].score2;
+									wk_final_score2 = open.tree[i+1].score1;
 								} else {
 									winner = 0;
 								}
@@ -2895,26 +2936,36 @@ function open_procShowTreeTable(){
 			if (winner!=1){
 				context.lineWidth = 4;
 				context.strokeStyle = "DarkSlategray";
+				context.fillStyle = "DarkSlategray";
 			} else {
 				context.lineWidth = 4;
 				context.strokeStyle = "red";
+				context.fillStyle = "red";
 			}
 			context.beginPath();
 			move(wX1, wY1);
 			line(wX_next,wY_next);
 			context.stroke();
+			if (winner==1 || winner==2){
+				filltext(wk_final_score1, wX_next-130,wY_next-10);
+			}
 			//勝者ゾーン敗者ライン
 			if (winner!=2){
 				context.lineWidth = 4;
 				context.strokeStyle = "DarkSlategray";
+				context.fillStyle = "DarkSlategray";
 			} else {
 				context.lineWidth = 4;
 				context.strokeStyle = "red";
+				context.fillStyle = "red";
 			}
 			context.beginPath();
 			move(wX_next,wY_next);
 			line(wX2,wY2);
 			context.stroke();
+			if (winner==1 || winner==2){
+					filltext(wk_final_score2, wX_next+110,wY_next-10);
+			}
 			//上ちょんライン
 			if (winner==0){
 				context.lineWidth = 4;
@@ -2927,9 +2978,9 @@ function open_procShowTreeTable(){
 			move(wX_next,wY_next);
 			line(wX_next,wY_next-20);
 			context.stroke();
-			rect(700,wY_next-60,400,60);
+			rect(wX_next-100,wY_next-60,200,40);
 			context.fillStyle = "black";
-			filltext(winnerNm, 760, wY_next-30);
+			filltext(winnerNm, wX_next-80, wY_next-30);
 		//プレーオフ
 		} else if (open.tree[i].zone==3){
 			/*if (open.tree[i].player1 == open.tree[i-1].player2 && open.tree[i].player1!=null ){
@@ -3010,7 +3061,7 @@ function open_procShowTreeTable(){
 					//敗者決勝
 
 				} else if (open.tree[i].zone!=1){*/
-				if (open.tree[i].zone!=1){
+				if (open.tree[i].zone!=1 && open.tree[i].zone!=4){
 					//wX_next = Math.max(wX1, wX2) + 200;
 					wX_next = x_center - 250; //Math.max(wX1, wX2) + 200; //-250;
 					if (winnerNm!=""){
@@ -3036,37 +3087,76 @@ function open_procShowTreeTable(){
 						context.strokeStyle = "DarkSlategray";
 					}
 					rect(wX_next-220,wY_next-20,200,40);
+					if (open.tree[i].zone==4){
+						context.fillStyle = "blue";
+						filltext(W[45], wX_next-210, wY_next-50);
+					}
 				}
 			}
 			if (wX_next!=0){
+				var wk_scoreX = wX_next;
+				if (yh_kbn==0){
+					wk_scoreX+=6;
+				} else {
+					wk_scoreX-=25;
+				}
 				//wY_next = (wY1+wY2)/2;
 				if (winner!=1){
 					context.lineWidth = 4;
 					context.strokeStyle = "DarkSlategray";
+					context.fillStyle = "DarkSlategray";
 				} else {
 					context.lineWidth = 4;
 					context.strokeStyle = "red";
+					context.fillStyle = "red";
 				}
 				context.beginPath();
 				move(wX1,wY1);
 				line(wX_next,wY1);
 				line(wX_next,wY_next);
 				context.stroke();
+				if (winner==1 || winner==2){
+					if (yh_kbn==0){
+						filltext(open.tree[i].score1, wk_scoreX,wY1+6);
+					} else if (open.tree[i].score1>99){
+						filltext(open.tree[i].score1, wk_scoreX-16,wY1+6);
+					} else if (open.tree[i].score1>9){
+						filltext(open.tree[i].score1, wk_scoreX-8,wY1+6);
+					} else {
+						filltext(open.tree[i].score1, wk_scoreX,wY1+6);
+					}
+				}
 				if (winner!=2){
 					context.lineWidth = 4;
 					context.strokeStyle = "DarkSlategray";
+					context.fillStyle = "DarkSlategray";
 				} else {
 					context.lineWidth = 4;
 					context.strokeStyle = "red";
+					context.fillStyle = "red";
 				}
 				context.beginPath();
 				move(wX2,wY2);
 				line(wX_next,wY2);
 				line(wX_next,wY_next);
 				context.stroke();
+				if (winner==1 || winner==2){
+					if (yh_kbn==0){
+						filltext(open.tree[i].score2, wk_scoreX,wY2+6);
+					} else if (open.tree[i].score2>99){
+						filltext(open.tree[i].score2, wk_scoreX-16,wY2+6);
+					} else if (open.tree[i].score2>9){
+						filltext(open.tree[i].score2, wk_scoreX-8,wY2+6);
+					} else {
+						filltext(open.tree[i].score2, wk_scoreX,wY2+6);
+					}
+				}
 			}
 		}
 	}
+	/*context.fillStyle = "black";
+	context.font = "italic bold 26px 'HG正楷書体-PRO'";
+	filltext("mobile × billiards   KAZUsoftware", 1550, canvas.height-50);*/
 }
 function move(x, y){
 	context.moveTo(x,y);

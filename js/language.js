@@ -80,6 +80,7 @@ function japanese(){
 	M[16] = "エントリーの上限は64人までです";
 	M[17] = "同名の選手がすでに存在します。";
 	M[18] = "削除してよろしいですか?";
+	M[19] = "拡張子に.pngをつけてください";
 
  }
 
@@ -162,4 +163,5 @@ function english(){
 	M[16] = "The maximum entry number is 64.";
 	M[17] = "That already exists.";
 	M[18] = "Do you remove sure?";
+	M[19] = "Please with the .png extension";
 }

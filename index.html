@@ -32,8 +32,9 @@
 
 
       $(window).resize(function() {
+        var rate = canvas.height/ canvas.width;
           var wk_width = getBrowserWidth();
-          $('#canvas').css("height",wk_width*1.3);
+          $('#canvas').css("height",wk_width*rate);
       });
    </script>
 </head>
