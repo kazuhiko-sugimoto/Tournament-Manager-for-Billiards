@@ -108,10 +108,10 @@ format.changeGame = function(){
       w_handy = [30,60,90,120,180,240];
       break;
     case "10":
-      w_handy = [10,20,30,40,50,60,70,80,90];
+      w_handy = [14,19,25,31,38,46,55,65,75];
       break;
     case "11":
-      w_handy = [5,10,15,20,25,30,35,40,45];
+      w_handy = [7,10,13,16,19,23,28,33,38];
       break;
     default:
       w_handy = [2,3,4,5,7,9];
